@@ -1,0 +1,91 @@
+@startuml Finance Calculator - Activity Diagram
+
+title Exportar Historial a CSV - Diagrama de Actividades
+
+start
+
+:Usuario hace click en\n"Descargar CSV";
+
+:Event listener captura\nevento del botón;
+
+:Llamar a exportHistoryToCSV();
+
+:Obtener historial desde\nLocalStorage;
+
+if (¿Historial vacío?) then (Sí)
+  :Mostrar alert\n"No hay historial para exportar";
+  stop
+else (No)
+  
+  :Crear headers del CSV\n["Tipo", "Monto", "Tasa",\n"Tiempo", "Resultado", "Fecha"];
+  
+  partition "Procesar Datos" {
+    :Iterar sobre cada\nitem del historial;
+    
+    repeat
+      :Obtener item actual;
+      
+      :Extraer detalles con regex\n- Monto: /P:\s*([0-9.]+)/\n- Tasa: /r:\s*([0-9.]+)%/\n- Tiempo: /t:\s*([0-9.]+)/;
+      
+      :Crear fila CSV:\n[tipo, monto, tasa,\ntiempo, resultado, fecha];
+      
+      :Agregar fila al array;
+      
+    repeat while (¿Más items?) is (Sí)
+    ->No;
+  }
+  
+  :Unir headers y filas\ncon separador de coma;
+  
+  :Unir todas las líneas\ncon salto de línea (\n);
+  
+  partition "Generar Archivo" {
+    :Crear Blob con contenido CSV\ntype: 'text/csv;charset=utf-8;';
+    
+    :Generar URL temporal\nURL.createObjectURL(blob);
+    
+    :Crear elemento <a>\ncon href = URL;
+    
+    :Establecer atributo\ndownload = 'finance_history.csv';
+    
+    :Ocultar elemento\nstyle.visibility = 'hidden';
+    
+    :Agregar <a> al DOM\ndocument.body.appendChild(link);
+  }
+  
+  partition "Descargar" {
+    :Simular click en <a>\nlink.click();
+    
+    note right
+      El navegador inicia
+      la descarga automática
+      del archivo CSV
+    end note
+    
+    :Remover <a> del DOM\ndocument.body.removeChild(link);
+    
+    :Liberar URL temporal\nURL.revokeObjectURL(url);
+  }
+  
+  :Descarga completada;
+  
+endif
+
+stop
+
+note right of start
+  **Función:** exportHistoryToCSV()
+  **Archivo:** history.js
+  **Trigger:** Click en botón "Descargar CSV"
+end note
+
+note left of stop
+  **Resultado:**
+  Archivo CSV descargado con formato:
+  
+  Tipo,Monto,Tasa,Tiempo,Resultado,Fecha
+  "Interés Simple","1000","5","2","1100.00","2024-11-26..."
+  "Interés Compuesto","1000","5","10","1628.89","2024-11-26..."
+end note
+
+@enduml
