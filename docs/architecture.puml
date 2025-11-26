@@ -1,33 +1,29 @@
 @startuml Finance Calculator - Component Diagram
 
-!define COMPONENT_COLOR #E3F2FD
-!define INTERFACE_COLOR #BBDEFB
-
 title Finance Calculator MVP - Component Diagram
 
-' Componentes principales
 package "Finance Calculator Application" {
     
     ' Capa de Presentación
-    component [UI Layer\n(index.html)] as UI COMPONENT_COLOR {
+    component "UI Layer\n(index.html)" as UI {
         portin " " as ui_input
         portout " " as ui_output
     }
     
     ' Capa de Lógica
-    component [Calculations Logic\n(calculations.js)] as Calc COMPONENT_COLOR {
+    component "Calculations Logic\n(calculations.js)" as Calc {
         portin " " as calc_input
         portout " " as calc_output
     }
     
     ' Capa de Historial
-    component [History Management\n(history.js)] as History COMPONENT_COLOR {
+    component "History Management\n(history.js)" as History {
         portin " " as hist_input
         portout " " as hist_output
     }
     
     ' Capa de Estilos
-    component [Styles\n(main.css)] as Styles COMPONENT_COLOR
+    component "Styles\n(main.css)" as Styles
     
     ' Almacenamiento
     database "LocalStorage\n(Browser)" as Storage {
@@ -35,12 +31,12 @@ package "Finance Calculator Application" {
 }
 
 ' Interfaces
-interface "User Interaction" as UserInt INTERFACE_COLOR
-interface "Event Listeners" as EventInt INTERFACE_COLOR
-interface "Calculation API" as CalcInt INTERFACE_COLOR
-interface "History API" as HistInt INTERFACE_COLOR
-interface "Storage API" as StorageInt INTERFACE_COLOR
-interface "CSV Export" as CSVInt INTERFACE_COLOR
+interface "User Interaction" as UserInt
+interface "Event Listeners" as EventInt
+interface "Calculation API" as CalcInt
+interface "History API" as HistInt
+interface "Storage API" as StorageInt
+interface "CSV Export" as CSVInt
 
 ' Conexiones Usuario -> UI
 UserInt --> ui_input : "Input Data\n(clicks, values)"
