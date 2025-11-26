@@ -87,22 +87,31 @@ function handleSimpleInterest() {
     updateResult(total, 'Interés Simple', `P: ${principal}, r: ${rate}%, t: ${time} años`);
 }
 
-// --- Compound Interest Logic (Legacy/Global for now) ---
-function calculateCompoundInterest() {
+// --- Compound Interest Logic ---
+
+function computeCompoundInterest(principal, rate, time, compounds) {
+    // Formula: A = P * (1 + r/n)^(n*t)
+    return principal * Math.pow((1 + (rate / 100) / compounds), compounds * time);
+}
+
+function handleCompoundInterest() {
     const principal = parseFloat(document.getElementById('compound-principal').value);
     const rate = parseFloat(document.getElementById('compound-rate').value);
     const time = parseFloat(document.getElementById('compound-time').value);
-    const n = parseInt(document.getElementById('compound-frequency').value);
+    const compounds = parseInt(document.getElementById('compound-frequency').value);
 
-    if (isNaN(principal) || isNaN(rate) || isNaN(time) || principal < 0 || rate < 0 || time < 0) {
-        alert('Por favor ingresa valores válidos y positivos');
+    if (isNaN(principal) || isNaN(rate) || isNaN(time) || isNaN(compounds)) {
+        alert('Por favor ingresa valores numéricos válidos');
         return;
     }
 
-    // Formula: A = P * (1 + r/n)^(n*t)
-    const amount = principal * Math.pow((1 + (rate / 100) / n), n * time);
+    if (principal < 0 || rate < 0 || time < 0 || compounds <= 0) {
+        alert('Los valores no pueden ser negativos (compounds debe ser mayor a 0)');
+        return;
+    }
 
-    updateResult(amount, 'Interés Compuesto', `P: ${principal}, r: ${rate}%, t: ${time} años, n: ${n}`);
+    const amount = computeCompoundInterest(principal, rate, time, compounds);
+    updateResult(amount, 'Interés Compuesto', `P: ${principal}, r: ${rate}%, t: ${time} años, n: ${compounds}`);
 }
 
 // --- Event Listeners ---
@@ -122,7 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Simple Interest Button
     const btnSimple = document.getElementById('btn-simple-interest');
     if (btnSimple) btnSimple.addEventListener('click', handleSimpleInterest);
-});
 
-// Expose for HTML onclicks (Compound only now)
-window.calculateCompoundInterest = calculateCompoundInterest;
+    // Compound Interest Button
+    const btnCompound = document.getElementById('btn-compound-interest');
+    if (btnCompound) btnCompound.addEventListener('click', handleCompoundInterest);
+});
