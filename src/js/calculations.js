@@ -59,6 +59,52 @@ function handleBasicCalculation(operation, symbol) {
     }
 }
 
+// --- Simple Interest Logic ---
+
+function computeSimpleInterest(principal, rate, time) {
+    // Formula: I = P * r * t (rate in decimal)
+    // Total Amount = P + I
+    const interest = principal * (rate / 100) * time;
+    return principal + interest;
+}
+
+function handleSimpleInterest() {
+    const principal = parseFloat(document.getElementById('simple-principal').value);
+    const rate = parseFloat(document.getElementById('simple-rate').value);
+    const time = parseFloat(document.getElementById('simple-time').value);
+
+    if (isNaN(principal) || isNaN(rate) || isNaN(time)) {
+        alert('Por favor ingresa valores numéricos válidos');
+        return;
+    }
+
+    if (principal < 0 || rate < 0 || time < 0) {
+        alert('Los valores no pueden ser negativos');
+        return;
+    }
+
+    const total = computeSimpleInterest(principal, rate, time);
+    updateResult(total, 'Interés Simple', `P: ${principal}, r: ${rate}%, t: ${time} años`);
+}
+
+// --- Compound Interest Logic (Legacy/Global for now) ---
+function calculateCompoundInterest() {
+    const principal = parseFloat(document.getElementById('compound-principal').value);
+    const rate = parseFloat(document.getElementById('compound-rate').value);
+    const time = parseFloat(document.getElementById('compound-time').value);
+    const n = parseInt(document.getElementById('compound-frequency').value);
+
+    if (isNaN(principal) || isNaN(rate) || isNaN(time) || principal < 0 || rate < 0 || time < 0) {
+        alert('Por favor ingresa valores válidos y positivos');
+        return;
+    }
+
+    // Formula: A = P * (1 + r/n)^(n*t)
+    const amount = principal * Math.pow((1 + (rate / 100) / n), n * time);
+
+    updateResult(amount, 'Interés Compuesto', `P: ${principal}, r: ${rate}%, t: ${time} años, n: ${n}`);
+}
+
 // --- Event Listeners ---
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -72,53 +118,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnSubtract) btnSubtract.addEventListener('click', () => handleBasicCalculation('subtract', '-'));
     if (btnMultiply) btnMultiply.addEventListener('click', () => handleBasicCalculation('multiply', '×'));
     if (btnDivide) btnDivide.addEventListener('click', () => handleBasicCalculation('divide', '÷'));
+
+    // Simple Interest Button
+    const btnSimple = document.getElementById('btn-simple-interest');
+    if (btnSimple) btnSimple.addEventListener('click', handleSimpleInterest);
 });
 
-
-// --- Financial Calculations (Legacy / Global for now if needed, but better to attach events too) ---
-// Keeping these as global functions for now if they are called from HTML onclicks in other sections,
-// or we can refactor them to event listeners as well. 
-// The prompt specifically asked for Basic Calculator refactor, but good practice to keep consistency.
-// However, to strictly follow "Basic Calculator" request, I will leave others as is but ensure they work.
-// Wait, the previous file had them as global window functions.
-// The other sections in index.html still use onclick="calculateSimpleInterest()", etc.
-// I should preserve those or refactor them.
-// The prompt only explicitly asked to refactor Basic Calculator. I will leave the others as global functions for compatibility 
-// with the existing HTML for those sections, unless I change them too. 
-// To be safe and minimize scope creep, I'll keep them but ensure they are exported or attached to window.
-
-function calculateSimpleInterest() {
-    const principal = parseFloat(document.getElementById('simple-principal').value);
-    const rate = parseFloat(document.getElementById('simple-rate').value);
-    const time = parseFloat(document.getElementById('simple-time').value);
-
-    if (isNaN(principal) || isNaN(rate) || isNaN(time) || principal < 0 || rate < 0 || time < 0) {
-        alert('Por favor ingresa valores válidos y positivos');
-        return;
-    }
-
-    const interest = principal * (rate / 100) * time;
-    const total = principal + interest;
-
-    updateResult(total, 'Interés Simple', `P: ${principal}, r: ${rate}%, t: ${time} años`);
-}
-
-function calculateCompoundInterest() {
-    const principal = parseFloat(document.getElementById('compound-principal').value);
-    const rate = parseFloat(document.getElementById('compound-rate').value);
-    const time = parseFloat(document.getElementById('compound-time').value);
-    const n = parseInt(document.getElementById('compound-frequency').value);
-
-    if (isNaN(principal) || isNaN(rate) || isNaN(time) || principal < 0 || rate < 0 || time < 0) {
-        alert('Por favor ingresa valores válidos y positivos');
-        return;
-    }
-
-    const amount = principal * Math.pow((1 + (rate / 100) / n), n * time);
-
-    updateResult(amount, 'Interés Compuesto', `P: ${principal}, r: ${rate}%, t: ${time} años, n: ${n}`);
-}
-
-// Expose for HTML onclicks (Simple/Compound)
-window.calculateSimpleInterest = calculateSimpleInterest;
+// Expose for HTML onclicks (Compound only now)
 window.calculateCompoundInterest = calculateCompoundInterest;
