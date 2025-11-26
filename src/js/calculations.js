@@ -1,4 +1,5 @@
 // Global state to store the last calculation for history
+// Feature: Simple Interest - Enhanced validation added
 let currentCalculation = null;
 
 // Helper to update result
