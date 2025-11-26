@@ -1,0 +1,130 @@
+@startuml Finance Calculator - Class Diagram
+
+title Finance Calculator MVP - Class Diagram
+
+' Clase principal de Cálculos
+class Calculation {
+    - num1: number
+    - num2: number
+    - principal: number
+    - rate: number
+    - time: number
+    - compounds: number
+    - result: number
+    - calculationType: string
+    - details: string
+    
+    + basicCalc(operation: string): number
+    + add(a: number, b: number): number
+    + subtract(a: number, b: number): number
+    + multiply(a: number, b: number): number
+    + divide(a: number, b: number): number
+    + simpleInterest(principal: number, rate: number, time: number): number
+    + compoundInterest(principal: number, rate: number, time: number, compounds: number): number
+    + validateInputs(): boolean
+    + updateResult(value: number, type: string, details: string): void
+}
+
+' Clase de Gestión de Historial
+class HistoryManager {
+    - historyKey: string
+    - history: Array<CalculationRecord>
+    
+    + save(calculation: CalculationRecord): void
+    + load(): Array<CalculationRecord>
+    + exportCSV(): void
+    + getHistory(): Array<CalculationRecord>
+    + clearHistory(): void
+}
+
+' Clase de Registro de Cálculo
+class CalculationRecord {
+    + type: string
+    + details: string
+    + result: string
+    + date: string
+    
+    + toString(): string
+}
+
+' Clase de UI Manager
+class UIManager {
+    - resultDisplay: HTMLElement
+    - historyList: HTMLElement
+    
+    + displayResult(value: number): void
+    + updateHistoryList(records: Array<CalculationRecord>): void
+    + attachEventListeners(): void
+    + getInputValues(formId: string): object
+}
+
+' Clase de Validación
+class Validator {
+    + isNumber(value: any): boolean
+    + isPositive(value: number): boolean
+    + isNonZero(value: number): boolean
+    + validateCalculationInputs(inputs: object): boolean
+}
+
+' Relaciones entre clases
+Calculation --> CalculationRecord : creates
+HistoryManager --> CalculationRecord : manages
+UIManager --> Calculation : uses
+UIManager --> HistoryManager : uses
+Calculation --> Validator : uses
+
+' Notas explicativas
+note right of Calculation
+  **Responsabilidades:**
+  - Ejecutar cálculos matemáticos
+  - Validar inputs
+  - Generar registros de cálculo
+  
+  **Métodos principales:**
+  - basicCalc(): Operaciones básicas
+  - simpleInterest(): Interés simple
+  - compoundInterest(): Interés compuesto
+end note
+
+note right of HistoryManager
+  **Responsabilidades:**
+  - Persistir cálculos en LocalStorage
+  - Cargar historial
+  - Exportar a CSV
+  
+  **Storage Key:**
+  'finance_calculator_history'
+  
+  **Format:**
+  JSON Array of CalculationRecord
+end note
+
+note bottom of CalculationRecord
+  **Estructura de datos:**
+  {
+    type: "Básica" | "Interés Simple" | "Interés Compuesto",
+    details: "P: 1000, r: 5%, t: 2 años",
+    result: "1100.00",
+    date: "2024-11-26 15:30:00"
+  }
+end note
+
+note left of UIManager
+  **Responsabilidades:**
+  - Gestionar interacción con DOM
+  - Actualizar visualización
+  - Manejar eventos (addEventListener)
+  
+  **No inline handlers**
+  Todo mediante event listeners
+end note
+
+note top of Validator
+  **Validaciones:**
+  - NaN checks
+  - Valores negativos
+  - División por cero
+  - Compounds > 0
+end note
+
+@enduml
