@@ -1,0 +1,118 @@
+@startuml Finance Calculator - Component Diagram
+
+!define COMPONENT_COLOR #E3F2FD
+!define INTERFACE_COLOR #BBDEFB
+
+title Finance Calculator MVP - Component Diagram
+
+' Componentes principales
+package "Finance Calculator Application" {
+    
+    ' Capa de Presentación
+    component [UI Layer\n(index.html)] as UI COMPONENT_COLOR {
+        portin " " as ui_input
+        portout " " as ui_output
+    }
+    
+    ' Capa de Lógica
+    component [Calculations Logic\n(calculations.js)] as Calc COMPONENT_COLOR {
+        portin " " as calc_input
+        portout " " as calc_output
+    }
+    
+    ' Capa de Historial
+    component [History Management\n(history.js)] as History COMPONENT_COLOR {
+        portin " " as hist_input
+        portout " " as hist_output
+    }
+    
+    ' Capa de Estilos
+    component [Styles\n(main.css)] as Styles COMPONENT_COLOR
+    
+    ' Almacenamiento
+    database "LocalStorage\n(Browser)" as Storage {
+    }
+}
+
+' Interfaces
+interface "User Interaction" as UserInt INTERFACE_COLOR
+interface "Event Listeners" as EventInt INTERFACE_COLOR
+interface "Calculation API" as CalcInt INTERFACE_COLOR
+interface "History API" as HistInt INTERFACE_COLOR
+interface "Storage API" as StorageInt INTERFACE_COLOR
+interface "CSV Export" as CSVInt INTERFACE_COLOR
+
+' Conexiones Usuario -> UI
+UserInt --> ui_input : "Input Data\n(clicks, values)"
+ui_output --> UserInt : "Display Results\n(calculations, history)"
+
+' Conexiones UI -> Calculations
+ui_output --> EventInt : "addEventListener"
+EventInt --> calc_input : "trigger calculation"
+calc_output --> CalcInt : "return result"
+CalcInt --> ui_input : "update display"
+
+' Conexiones UI -> History
+ui_output --> hist_input : "save/export events"
+hist_output --> HistInt : "history data"
+HistInt --> ui_input : "update list"
+
+' Conexiones Calculations -> History
+calc_output --> hist_input : "currentCalculation\n(global state)"
+
+' Conexiones History -> Storage
+hist_output --> StorageInt : "save/load"
+StorageInt --> Storage : "localStorage API"
+Storage --> StorageInt : "stored data"
+StorageInt --> hist_input : "retrieved data"
+
+' Conexiones History -> CSV
+hist_output --> CSVInt : "generate CSV"
+CSVInt --> UserInt : "download file\n(Blob + URL)"
+
+' Conexiones UI -> Styles
+Styles --> ui_input : "apply styles"
+
+' Notas explicativas
+note right of Calc
+  **Funciones:**
+  - Basic Calculator
+  - Simple Interest
+  - Compound Interest
+  
+  **Validaciones:**
+  - NaN checks
+  - Negative values
+  - Division by zero
+end note
+
+note right of History
+  **Funciones:**
+  - Save to history
+  - Load history
+  - Export to CSV
+  
+  **Data Format:**
+  - Type, Amount, Rate
+  - Time, Result, Date
+end note
+
+note bottom of Storage
+  **Key:** 'finance_calculator_history'
+  **Format:** JSON Array
+  **Persistence:** Browser LocalStorage
+end note
+
+note left of UI
+  **Components:**
+  - Basic Calculator Form
+  - Simple Interest Form
+  - Compound Interest Form
+  - Results Display
+  - History List
+  
+  **No inline handlers**
+  All events via addEventListener
+end note
+
+@enduml
