@@ -1,0 +1,130 @@
+@startuml Finance Calculator - Sequence Diagram
+
+title Calcular Interés Compuesto y Guardar en Historial
+
+actor Usuario
+participant "UI\n(index.html)" as UI
+participant "Calculations\n(calculations.js)" as Calc
+participant "History\n(history.js)" as History
+database "LocalStorage\n(Browser)" as Storage
+
+== Fase 1: Ingreso de Datos ==
+
+Usuario -> UI: Ingresa datos\n(Principal: 1000, Rate: 5%,\nTime: 10, Frequency: Anual)
+activate UI
+
+UI -> UI: Valida campos no vacíos
+note right: Verifica que todos\nlos inputs tengan valores
+
+== Fase 2: Trigger de Cálculo ==
+
+Usuario -> UI: Click en\n"Calcular Interés Compuesto"
+UI -> UI: addEventListener('click')
+note right: Event listener captura\nel evento del botón
+
+UI -> Calc: handleCompoundInterest()
+activate Calc
+
+== Fase 3: Validación de Inputs ==
+
+Calc -> Calc: Obtiene valores del DOM\n(getElementById)
+Calc -> Calc: parseFloat(principal)\nparseFloat(rate)\nparseFloat(time)\nparseInt(compounds)
+
+Calc -> Calc: Valida isNaN()
+note right: Verifica que todos\nlos valores sean numéricos
+
+alt Valores inválidos (NaN)
+    Calc -> UI: alert("Valores numéricos válidos")
+    UI -> Usuario: Muestra mensaje de error
+    deactivate Calc
+else Valores válidos
+    Calc -> Calc: Valida valores negativos\n(principal < 0, rate < 0, etc.)
+    
+    alt Valores negativos
+        Calc -> UI: alert("No pueden ser negativos")
+        UI -> Usuario: Muestra mensaje de error
+        deactivate Calc
+    else Valores positivos válidos
+        
+        == Fase 4: Ejecución del Cálculo ==
+        
+        Calc -> Calc: computeCompoundInterest(\nprincipal, rate, time, compounds)
+        note right: Fórmula:\nA = P * (1 + r/n)^(n*t)
+        
+        Calc -> Calc: amount = 1000 * (1 + 0.05/1)^(1*10)
+        Calc -> Calc: amount = 1628.89
+        
+        == Fase 5: Actualización de Resultado ==
+        
+        Calc -> Calc: updateResult(amount, type, details)
+        note right: Crea objeto\ncurrentCalculation
+        
+        Calc -> Calc: currentCalculation = {\n  type: "Interés Compuesto",\n  details: "P: 1000, r: 5%, t: 10, n: 1",\n  result: "1628.89",\n  date: "2024-11-26 15:30:00"\n}
+        
+        Calc -> UI: Actualiza DOM\n(resultDisplay.textContent = "1628.89")
+        deactivate Calc
+        
+        UI -> Usuario: Muestra resultado\n"1628.89"
+        deactivate UI
+        
+        == Fase 6: Guardar en Historial ==
+        
+        Usuario -> UI: Click en\n"Guardar al Historial"
+        activate UI
+        
+        UI -> UI: addEventListener('click')
+        UI -> History: saveCalculationToHistory(\ncurrentCalculation)
+        activate History
+        
+        History -> History: Valida que calculation\nno sea null
+        
+        alt Calculation es null
+            History -> UI: alert("Realiza un cálculo primero")
+            UI -> Usuario: Muestra mensaje
+            deactivate History
+        else Calculation válido
+            
+            == Fase 7: Persistencia en LocalStorage ==
+            
+            History -> History: getHistory()
+            History -> Storage: localStorage.getItem(\n'finance_calculator_history')
+            activate Storage
+            Storage --> History: JSON string o null
+            deactivate Storage
+            
+            History -> History: JSON.parse(stored) o []
+            History -> History: history.push(currentCalculation)
+            
+            History -> Storage: localStorage.setItem(\n'finance_calculator_history',\nJSON.stringify(history))
+            activate Storage
+            Storage --> History: Guardado exitoso
+            deactivate Storage
+            
+            == Fase 8: Actualización de UI ==
+            
+            History -> History: loadHistory()
+            History -> History: Obtiene últimos 10 items
+            History -> History: Crea elementos <li>
+            
+            History -> UI: Actualiza historyList
+            deactivate History
+            
+            UI -> UI: alert("Guardado en el historial")
+            UI -> Usuario: Muestra confirmación\ny lista actualizada
+            deactivate UI
+        end
+    end
+end
+
+note over Usuario, Storage
+  **Flujo Completo:**
+  1. Usuario ingresa datos
+  2. UI valida y captura evento
+  3. Calculations valida y calcula
+  4. Resultado se muestra en UI
+  5. Usuario guarda en historial
+  6. History persiste en LocalStorage
+  7. UI se actualiza con historial
+end note
+
+@enduml
