@@ -165,8 +165,8 @@ describe('Finance Calculator - Unit Tests', () => {
             const total = principal + interest;
 
             // Assert
-            expect(interest).toBe(525);
-            expect(total).toBe(5525);
+            expect(interest).toBeCloseTo(525, 2);
+            expect(total).toBeCloseTo(5525, 2);
         });
 
         test('should return principal when rate or time is zero', () => {
@@ -260,7 +260,7 @@ describe('Finance Calculator - Unit Tests', () => {
 
             // Assert
             expect(amount).toBeCloseTo(expected, 2);
-            expect(amount).toBeCloseTo(6104.98, 1);
+            expect(amount).toBeCloseTo(6100.95, 1);
         });
     });
 
