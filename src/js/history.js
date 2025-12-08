@@ -95,6 +95,32 @@ function exportHistoryToCSV() {
         csvContent += 'MOVIMIENTOS Y BALANCE\n';
         csvContent += movHeaders.join(',') + '\n';
         csvContent += movRows.map(row => row.join(',')).join('\n');
+        csvContent += '\n\n';
+    }
+
+    // Section 3: Trading Data
+    const tradesStored = localStorage.getItem('finance_calculator_trades');
+    const trades = tradesStored ? JSON.parse(tradesStored) : [];
+
+    if (trades.length > 0) {
+        const tradeHeaders = ['Asset', 'Entry', 'SL', 'TP', 'Leverage', 'R/R', 'Resultado', 'Fecha'];
+
+        const tradeRows = trades.map(item => {
+            return [
+                `"${item.asset}"`,
+                `"${item.entry}"`,
+                `"${item.sl}"`,
+                `"${item.tp}"`,
+                `"${item.leverage}"`,
+                `"${item.rr}"`,
+                `"${item.resultado}"`,
+                `"${item.fecha}"`
+            ];
+        });
+
+        csvContent += 'TRADING POSITIONS\n';
+        csvContent += tradeHeaders.join(',') + '\n';
+        csvContent += tradeRows.map(row => row.join(',')).join('\n');
     }
 
     // Create Blob and Download

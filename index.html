@@ -143,6 +143,57 @@
             </div>
         </section>
 
+        <!-- Trading Tools -->
+        <section id="trading-tools" class="card">
+            <h2>Herramientas de Trading</h2>
+
+            <div class="form-group">
+                <label for="trading-capital">Capital ($)</label>
+                <input type="number" id="trading-capital" step="0.01" placeholder="Ej. 10000">
+            </div>
+            <div class="form-group">
+                <label for="trading-entry">Precio de Entrada ($)</label>
+                <input type="number" id="trading-entry" step="0.01" placeholder="Ej. 50">
+            </div>
+            <div class="form-group">
+                <label for="trading-risk">Riesgo por Operación (%)</label>
+                <input type="number" id="trading-risk" step="0.1" placeholder="Ej. 2">
+            </div>
+            <div class="form-group">
+                <label for="trading-leverage">Apalancamiento (x)</label>
+                <input type="number" id="trading-leverage" step="1" placeholder="Ej. 10">
+            </div>
+            <div class="form-group">
+                <label for="trading-rr">Ratio Riesgo/Recompensa (R:R)</label>
+                <input type="number" id="trading-rr" step="0.1" placeholder="Ej. 2">
+            </div>
+            <button id="btn-trading-calculate" class="btn-primary">Calcular Trading</button>
+
+            <!-- Trading Results -->
+            <div class="trading-results"
+                style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                <h3>Resultados</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <strong>Stop Loss (SL):</strong>
+                        <div id="result-sl" style="font-size: 18px; color: #e74c3c;">$0.00</div>
+                    </div>
+                    <div>
+                        <strong>Take Profit (TP):</strong>
+                        <div id="result-tp" style="font-size: 18px; color: #27ae60;">$0.00</div>
+                    </div>
+                    <div>
+                        <strong>Tamaño de Lote:</strong>
+                        <div id="result-lot" style="font-size: 18px; color: #3498db;">0.0000</div>
+                    </div>
+                    <div>
+                        <strong>Margen Requerido:</strong>
+                        <div id="result-margen" style="font-size: 18px; color: #9b59b6;">$0.00</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Resultados y Historial -->
         <section id="results-section" class="card highlight">
             <h2>Resultado</h2>

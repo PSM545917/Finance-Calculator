@@ -287,6 +287,141 @@ function loadBalanceOnStartup() {
     updateBalanceDisplay(balance);
 }
 
+// --- Trading Tools Logic ---
+
+const TRADES_KEY = 'finance_calculator_trades';
+
+function getTrades() {
+    const stored = localStorage.getItem(TRADES_KEY);
+    return stored ? JSON.parse(stored) : [];
+}
+
+function calculateStopLoss(entryPrice, riskPercent) {
+    // Validate inputs
+    if (isNaN(entryPrice) || isNaN(riskPercent)) {
+        throw new Error('Todos los valores deben ser numéricos');
+    }
+
+    if (entryPrice <= 0 || riskPercent < 0 || riskPercent > 100) {
+        throw new Error('Precio de entrada debe ser positivo y riesgo entre 0-100%');
+    }
+
+    return entryPrice * (1 - riskPercent / 100);
+}
+
+function calculateTakeProfit(entryPrice, sl, rrRatio) {
+    // Validate inputs
+    if (isNaN(entryPrice) || isNaN(sl) || isNaN(rrRatio)) {
+        throw new Error('Todos los valores deben ser numéricos');
+    }
+
+    if (entryPrice <= 0 || sl <= 0 || rrRatio <= 0) {
+        throw new Error('Todos los valores deben ser positivos');
+    }
+
+    if (sl >= entryPrice) {
+        throw new Error('Stop Loss debe ser menor que el precio de entrada');
+    }
+
+    return entryPrice + ((entryPrice - sl) * rrRatio);
+}
+
+function calculateLeveragePosition(capital, leverage, entryPrice, riskPercent) {
+    // Validate inputs
+    if (isNaN(capital) || isNaN(leverage) || isNaN(entryPrice) || isNaN(riskPercent)) {
+        throw new Error('Todos los valores deben ser numéricos');
+    }
+
+    if (capital <= 0 || leverage <= 0 || entryPrice <= 0 || riskPercent < 0) {
+        throw new Error('Todos los valores deben ser positivos');
+    }
+
+    const positionSize = capital * leverage;
+    const margen = positionSize / leverage;
+
+    return {
+        positionSize: parseFloat(positionSize.toFixed(2)),
+        margen: parseFloat(margen.toFixed(2))
+    };
+}
+
+function positionSizing(capital, riskPercent, entryPrice, sl) {
+    // Validate inputs
+    if (isNaN(capital) || isNaN(riskPercent) || isNaN(entryPrice) || isNaN(sl)) {
+        throw new Error('Todos los valores deben ser numéricos');
+    }
+
+    if (capital <= 0 || riskPercent <= 0 || entryPrice <= 0 || sl <= 0) {
+        throw new Error('Todos los valores deben ser positivos');
+    }
+
+    if (sl >= entryPrice) {
+        throw new Error('Stop Loss debe ser menor que el precio de entrada');
+    }
+
+    const riskAmount = capital * (riskPercent / 100);
+    const priceRisk = entryPrice - sl;
+    const lotSize = riskAmount / priceRisk;
+
+    return parseFloat(lotSize.toFixed(4));
+}
+
+function handleTradingCalculation() {
+    const capital = parseFloat(document.getElementById('trading-capital').value);
+    const entryPrice = parseFloat(document.getElementById('trading-entry').value);
+    const riskPercent = parseFloat(document.getElementById('trading-risk').value);
+    const leverage = parseFloat(document.getElementById('trading-leverage').value);
+    const rrRatio = parseFloat(document.getElementById('trading-rr').value);
+
+    try {
+        // Calculate all trading metrics
+        const sl = calculateStopLoss(entryPrice, riskPercent);
+        const tp = calculateTakeProfit(entryPrice, sl, rrRatio);
+        const leveragePos = calculateLeveragePosition(capital, leverage, entryPrice, riskPercent);
+        const lotSize = positionSizing(capital, riskPercent, entryPrice, sl);
+
+        // Display results
+        displayTradingResults({
+            sl: sl,
+            tp: tp,
+            lotSize: lotSize,
+            margen: leveragePos.margen,
+            positionSize: leveragePos.positionSize
+        });
+
+        // Store trade for history
+        const trade = {
+            asset: 'Trading Position',
+            entry: entryPrice,
+            sl: sl,
+            tp: tp,
+            leverage: leverage,
+            rr: rrRatio,
+            resultado: 'Pendiente',
+            fecha: new Date().toLocaleString()
+        };
+
+        const trades = getTrades();
+        trades.push(trade);
+        localStorage.setItem(TRADES_KEY, JSON.stringify(trades));
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+function displayTradingResults(results) {
+    const slDisplay = document.getElementById('result-sl');
+    const tpDisplay = document.getElementById('result-tp');
+    const lotDisplay = document.getElementById('result-lot');
+    const margenDisplay = document.getElementById('result-margen');
+
+    if (slDisplay) slDisplay.textContent = `$${results.sl.toFixed(2)}`;
+    if (tpDisplay) tpDisplay.textContent = `$${results.tp.toFixed(2)}`;
+    if (lotDisplay) lotDisplay.textContent = results.lotSize.toFixed(4);
+    if (margenDisplay) margenDisplay.textContent = `$${results.margen.toFixed(2)}`;
+}
+
 // --- Event Listeners ---
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -316,6 +451,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Movement Tracking Button
     const btnMovement = document.getElementById('btn-track-movement');
     if (btnMovement) btnMovement.addEventListener('click', handleMovementTracking);
+
+    // Trading Tools Button
+    const btnTrading = document.getElementById('btn-trading-calculate');
+    if (btnTrading) btnTrading.addEventListener('click', handleTradingCalculation);
 
     // Load balance on startup
     loadBalanceOnStartup();

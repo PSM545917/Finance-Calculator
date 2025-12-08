@@ -432,6 +432,172 @@ describe('Finance Calculator - Unit Tests', () => {
             expect(() => amortizacionPrestamo('invalid', 5, 12)).toThrow('Todos los valores deben ser numéricos');
         });
     });
+
+    // ==================== TRADING TOOLS TESTS ====================
+
+    describe('Trading Tools Calculations', () => {
+
+        // Helper functions to simulate trading calculations
+        function calculateStopLoss(entryPrice, riskPercent) {
+            if (isNaN(entryPrice) || isNaN(riskPercent)) {
+                throw new Error('Todos los valores deben ser numéricos');
+            }
+            if (entryPrice <= 0 || riskPercent < 0 || riskPercent > 100) {
+                throw new Error('Precio de entrada debe ser positivo y riesgo entre 0-100%');
+            }
+            return entryPrice * (1 - riskPercent / 100);
+        }
+
+        function calculateTakeProfit(entryPrice, sl, rrRatio) {
+            if (isNaN(entryPrice) || isNaN(sl) || isNaN(rrRatio)) {
+                throw new Error('Todos los valores deben ser numéricos');
+            }
+            if (entryPrice <= 0 || sl <= 0 || rrRatio <= 0) {
+                throw new Error('Todos los valores deben ser positivos');
+            }
+            if (sl >= entryPrice) {
+                throw new Error('Stop Loss debe ser menor que el precio de entrada');
+            }
+            return entryPrice + ((entryPrice - sl) * rrRatio);
+        }
+
+        function calculateLeveragePosition(capital, leverage, entryPrice, riskPercent) {
+            if (isNaN(capital) || isNaN(leverage) || isNaN(entryPrice) || isNaN(riskPercent)) {
+                throw new Error('Todos los valores deben ser numéricos');
+            }
+            if (capital <= 0 || leverage <= 0 || entryPrice <= 0 || riskPercent < 0) {
+                throw new Error('Todos los valores deben ser positivos');
+            }
+            const positionSize = capital * leverage;
+            const margen = positionSize / leverage;
+            return {
+                positionSize: parseFloat(positionSize.toFixed(2)),
+                margen: parseFloat(margen.toFixed(2))
+            };
+        }
+
+        function positionSizing(capital, riskPercent, entryPrice, sl) {
+            if (isNaN(capital) || isNaN(riskPercent) || isNaN(entryPrice) || isNaN(sl)) {
+                throw new Error('Todos los valores deben ser numéricos');
+            }
+            if (capital <= 0 || riskPercent <= 0 || entryPrice <= 0 || sl <= 0) {
+                throw new Error('Todos los valores deben ser positivos');
+            }
+            if (sl >= entryPrice) {
+                throw new Error('Stop Loss debe ser menor que el precio de entrada');
+            }
+            const riskAmount = capital * (riskPercent / 100);
+            const priceRisk = entryPrice - sl;
+            const lotSize = riskAmount / priceRisk;
+            return parseFloat(lotSize.toFixed(4));
+        }
+
+        test('should calculate stop loss correctly', () => {
+            // Arrange
+            const entryPrice = 100;
+            const riskPercent = 2;
+
+            // Act
+            const sl = calculateStopLoss(entryPrice, riskPercent);
+
+            // Assert
+            expect(sl).toBeCloseTo(98, 2);
+            expect(sl).toBeLessThan(entryPrice);
+
+            // Test with different values
+            const sl2 = calculateStopLoss(50, 5);
+            expect(sl2).toBeCloseTo(47.5, 2);
+        });
+
+        test('should calculate take profit correctly', () => {
+            // Arrange
+            const entryPrice = 100;
+            const sl = 98;
+            const rrRatio = 2;
+
+            // Act
+            const tp = calculateTakeProfit(entryPrice, sl, rrRatio);
+
+            // Assert
+            // Risk = 100 - 98 = 2
+            // Reward = 2 * 2 = 4
+            // TP = 100 + 4 = 104
+            expect(tp).toBeCloseTo(104, 2);
+            expect(tp).toBeGreaterThan(entryPrice);
+
+            // Test with different R:R ratio
+            const tp2 = calculateTakeProfit(100, 95, 3);
+            // Risk = 5, Reward = 15, TP = 115
+            expect(tp2).toBeCloseTo(115, 2);
+        });
+
+        test('should calculate leverage position correctly', () => {
+            // Arrange
+            const capital = 10000;
+            const leverage = 10;
+            const entryPrice = 50;
+            const riskPercent = 2;
+
+            // Act
+            const result = calculateLeveragePosition(capital, leverage, entryPrice, riskPercent);
+
+            // Assert
+            expect(result.positionSize).toBeCloseTo(100000, 2);
+            expect(result.margen).toBeCloseTo(10000, 2);
+            expect(result.margen).toBe(capital);
+
+            // Test with different leverage
+            const result2 = calculateLeveragePosition(5000, 20, 100, 1);
+            expect(result2.positionSize).toBeCloseTo(100000, 2);
+            expect(result2.margen).toBeCloseTo(5000, 2);
+        });
+
+        test('should calculate position sizing correctly', () => {
+            // Arrange
+            const capital = 10000;
+            const riskPercent = 2;
+            const entryPrice = 50;
+            const sl = 48;
+
+            // Act
+            const lotSize = positionSizing(capital, riskPercent, entryPrice, sl);
+
+            // Assert
+            // Risk amount = 10000 * 0.02 = 200
+            // Price risk = 50 - 48 = 2
+            // Lot size = 200 / 2 = 100
+            expect(lotSize).toBeCloseTo(100, 4);
+
+            // Test with different parameters
+            const lotSize2 = positionSizing(5000, 1, 100, 95);
+            // Risk amount = 50, Price risk = 5, Lot size = 10
+            expect(lotSize2).toBeCloseTo(10, 4);
+        });
+
+        test('should handle edge cases and validation for trading functions', () => {
+            // Test 1: Stop Loss validation
+            expect(() => calculateStopLoss(-100, 2)).toThrow('Precio de entrada debe ser positivo');
+            expect(() => calculateStopLoss(100, 150)).toThrow('riesgo entre 0-100%');
+            expect(() => calculateStopLoss('invalid', 2)).toThrow('numéricos');
+
+            // Test 2: Take Profit validation
+            expect(() => calculateTakeProfit(100, 105, 2)).toThrow('Stop Loss debe ser menor');
+            expect(() => calculateTakeProfit(100, 98, -1)).toThrow('positivos');
+
+            // Test 3: Position Sizing validation
+            expect(() => positionSizing(10000, 2, 50, 55)).toThrow('Stop Loss debe ser menor');
+            expect(() => positionSizing(-1000, 2, 50, 48)).toThrow('positivos');
+
+            // Test 4: Zero risk stop loss (edge case)
+            const slZeroRisk = calculateStopLoss(100, 0);
+            expect(slZeroRisk).toBeCloseTo(100, 2);
+
+            // Test 5: High leverage position
+            const highLeverage = calculateLeveragePosition(1000, 100, 50, 1);
+            expect(highLeverage.positionSize).toBeCloseTo(100000, 2);
+            expect(highLeverage.margen).toBeCloseTo(1000, 2);
+        });
+    });
 });
 
 // Export for Jest
