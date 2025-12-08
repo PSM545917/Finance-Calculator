@@ -598,6 +598,93 @@ describe('Finance Calculator - Unit Tests', () => {
             expect(highLeverage.margen).toBeCloseTo(1000, 2);
         });
     });
+
+    // ==================== MARKET VISUALIZATION TESTS ====================
+
+    describe('Market Visualization - fetchVariacion', () => {
+
+        test('should calculate price variation correctly from API response', async () => {
+            // Arrange
+            const mockFetch = jest.fn().mockResolvedValue({
+                json: jest.fn().mockResolvedValue({
+                    'Global Quote': {
+                        '05. price': '150',
+                        '02. open': '145'
+                    }
+                })
+            });
+            global.fetch = mockFetch;
+
+            // Simulate fetchVariacion function
+            async function fetchVariacion(asset) {
+                const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${asset}&apikey=demo`);
+                const data = await response.json();
+                const quote = data['Global Quote'];
+                const currentPrice = parseFloat(quote['05. price']);
+                const openPrice = parseFloat(quote['02. open']);
+                const variacion = ((currentPrice - openPrice) / openPrice) * 100;
+                return { variacion, currentPrice, openPrice };
+            }
+
+            // Act
+            const result = await fetchVariacion('AAPL');
+
+            // Assert
+            // Variation = (150 - 145) / 145 * 100 = 3.448...%
+            expect(result.variacion).toBeCloseTo(3.45, 2);
+            expect(result.currentPrice).toBe(150);
+            expect(result.openPrice).toBe(145);
+            expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('AAPL'));
+        });
+
+        test('should handle different price scenarios and calculate variation correctly', async () => {
+            // Arrange - Test with negative variation
+            const mockFetch = jest.fn().mockResolvedValue({
+                json: jest.fn().mockResolvedValue({
+                    'Global Quote': {
+                        '05. price': '95',
+                        '02. open': '100'
+                    }
+                })
+            });
+            global.fetch = mockFetch;
+
+            // Simulate fetchVariacion function
+            async function fetchVariacion(asset) {
+                const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${asset}&apikey=demo`);
+                const data = await response.json();
+                const quote = data['Global Quote'];
+                const currentPrice = parseFloat(quote['05. price']);
+                const openPrice = parseFloat(quote['02. open']);
+                const variacion = ((currentPrice - openPrice) / openPrice) * 100;
+                return { variacion, currentPrice, openPrice };
+            }
+
+            // Act
+            const result = await fetchVariacion('BTCUSD');
+
+            // Assert
+            // Variation = (95 - 100) / 100 * 100 = -5%
+            expect(result.variacion).toBeCloseTo(-5, 2);
+            expect(result.currentPrice).toBe(95);
+            expect(result.openPrice).toBe(100);
+            expect(result.variacion).toBeLessThan(0); // Negative variation
+
+            // Test with zero variation
+            const mockFetchZero = jest.fn().mockResolvedValue({
+                json: jest.fn().mockResolvedValue({
+                    'Global Quote': {
+                        '05. price': '100',
+                        '02. open': '100'
+                    }
+                })
+            });
+            global.fetch = mockFetchZero;
+
+            const resultZero = await fetchVariacion('EURUSD');
+            expect(resultZero.variacion).toBeCloseTo(0, 2);
+        });
+    });
 });
 
 // Export for Jest

@@ -194,6 +194,87 @@
             </div>
         </section>
 
+        <!-- Market Watch & Visualization -->
+        <section id="market-watch" class="card">
+            <h2>Visualización de Mercado</h2>
+
+            <!-- Asset List -->
+            <div class="subsection">
+                <h3>Lista de Activos</h3>
+                <div class="form-group">
+                    <label for="new-asset-input">Agregar Activo (Símbolo)</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="new-asset-input" placeholder="Ej. TSLA, GOOGL" style="flex: 1;">
+                        <button id="btn-add-asset" class="btn-secondary">Agregar</button>
+                    </div>
+                </div>
+
+                <ul id="assets-list" style="list-style: none; padding: 0; margin-top: 15px;">
+                    <li data-symbol="AAPL" class="asset-item"
+                        style="padding: 10px; margin: 5px 0; background: #f8f9fa; border-radius: 5px; cursor: pointer;">
+                        📈 AAPL - Apple Inc.
+                    </li>
+                    <li data-symbol="BTCUSD" class="asset-item"
+                        style="padding: 10px; margin: 5px 0; background: #f8f9fa; border-radius: 5px; cursor: pointer;">
+                        ₿ BTCUSD - Bitcoin
+                    </li>
+                    <li data-symbol="EURUSD" class="asset-item"
+                        style="padding: 10px; margin: 5px 0; background: #f8f9fa; border-radius: 5px; cursor: pointer;">
+                        💱 EURUSD - Euro/USD
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Chart Container -->
+            <div class="subsection" style="margin-top: 30px;">
+                <h3>Gráfico TradingView</h3>
+                <div id="chart-container"
+                    style="min-height: 400px; background: #f0f0f0; border-radius: 5px; display: flex; align-items: center; justify-content: center;">
+                    <p style="color: #999;">Selecciona un activo para ver el gráfico</p>
+                </div>
+            </div>
+
+            <!-- Price Variation Display -->
+            <div class="subsection" style="margin-top: 20px;">
+                <h3>Variación de Precio</h3>
+                <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                    <div>
+                        <strong>Activo Actual:</strong>
+                        <span id="current-asset-display" style="font-size: 18px; margin-left: 10px;">-</span>
+                    </div>
+                    <div>
+                        <strong>Variación Diaria:</strong>
+                        <div id="variacion-display" style="font-size: 24px; font-weight: bold; margin-left: 10px;">-
+                        </div>
+                    </div>
+                    <div>
+                        <strong>Precio Actual:</strong>
+                        <span id="current-price-display" style="font-size: 18px; margin-left: 10px;">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trade Analysis Integration -->
+            <div class="subsection" style="margin-top: 20px;">
+                <h3>Análisis de Trade</h3>
+                <p style="color: #666; font-size: 14px;">Usa el precio actual del activo seleccionado para calcular
+                    niveles de trading</p>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="trade-risk-percent">Riesgo (%)</label>
+                        <input type="number" id="trade-risk-percent" step="0.1" placeholder="Ej. 2" value="2">
+                    </div>
+                    <button id="btn-analyze-trade" class="btn-primary" style="margin-top: 20px;">Analizar Trade</button>
+                </div>
+                <div id="trade-analysis-result"
+                    style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px; display: none;">
+                    <p><strong>Precio de Entrada:</strong> <span id="analysis-entry">-</span></p>
+                    <p><strong>Stop Loss:</strong> <span id="analysis-sl" style="color: #e74c3c;">-</span></p>
+                    <p><strong>Riesgo por Unidad:</strong> <span id="analysis-risk">-</span></p>
+                </div>
+            </div>
+        </section>
+
         <!-- Resultados y Historial -->
         <section id="results-section" class="card highlight">
             <h2>Resultado</h2>
