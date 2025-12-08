@@ -579,6 +579,31 @@ function handleAnalyzeTrade() {
     }
 }
 
+// --- SPA Navigation Logic ---
+
+function switchSection(sectionId) {
+    // Hide all sections
+    const allSections = document.querySelectorAll('.section');
+    allSections.forEach(section => {
+        section.style.display = 'none';
+    });
+
+    // Show the selected section
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.style.display = 'block';
+    }
+
+    // Update active button state
+    const allButtons = document.querySelectorAll('.nav-btn');
+    allButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.section === sectionId) {
+            btn.classList.add('active');
+        }
+    });
+}
+
 // --- Event Listeners ---
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -626,6 +651,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Market Visualization - Analyze Trade Button
     const btnAnalyzeTrade = document.getElementById('btn-analyze-trade');
     if (btnAnalyzeTrade) btnAnalyzeTrade.addEventListener('click', handleAnalyzeTrade);
+
+    // Navigation Buttons for SPA
+    const navButtons = document.querySelectorAll('.nav-btn');
+    navButtons.forEach(btn => {
+        btn.addEventListener('click', () => switchSection(btn.dataset.section));
+    });
 
     // Load balance on startup
     loadBalanceOnStartup();

@@ -685,6 +685,7 @@ describe('Finance Calculator - Unit Tests', () => {
             expect(resultZero.variacion).toBeCloseTo(0, 2);
         });
     });
+
 });
 
 // Export for Jest
@@ -693,3 +694,4 @@ if (typeof module !== 'undefined' && module.exports) {
         // Export test suite
     };
 }
+

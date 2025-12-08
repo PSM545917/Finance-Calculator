@@ -14,9 +14,17 @@
         <p>Herramienta financiera para cálculos rápidos y precisos.</p>
     </header>
 
+    <!-- Navigation Bar -->
+    <nav id="main-nav">
+        <button class="nav-btn active" data-section="basic-calc">Calculadora Básica</button>
+        <button class="nav-btn" data-section="loans-movements">Préstamos & Movimientos</button>
+        <button class="nav-btn" data-section="trading-tools">Trading Tools</button>
+        <button class="nav-btn" data-section="market-watch">Market Watch</button>
+    </nav>
+
     <main class="container">
         <!-- Calculadora Básica -->
-        <section id="basic-calc" class="card">
+        <section id="basic-calc" class="card section" style="display: block;">
             <h2>Calculadora Básica</h2>
             <div class="form-group">
                 <input type="number" id="basic-num1" placeholder="Número 1">
@@ -31,7 +39,7 @@
         </section>
 
         <!-- Interés Simple -->
-        <section id="simple-interest" class="card">
+        <section id="simple-interest" class="card section" style="display: block;">
             <h2>Interés Simple</h2>
             <div class="form-group">
                 <label for="simple-principal">Monto Principal ($)</label>
@@ -49,7 +57,7 @@
         </section>
 
         <!-- Interés Compuesto -->
-        <section id="compound-interest" class="card">
+        <section id="compound-interest" class="card section" style="display: block;">
             <h2>Interés Compuesto</h2>
             <div class="form-group">
                 <label for="compound-principal">Monto Principal ($)</label>
@@ -76,7 +84,7 @@
         </section>
 
         <!-- Préstamos y Movimientos -->
-        <section id="loans-movements" class="card">
+        <section id="loans-movements" class="card section" style="display: none;">
             <h2>Préstamos y Movimientos</h2>
 
             <!-- Loan Amortization Form -->
@@ -144,7 +152,7 @@
         </section>
 
         <!-- Trading Tools -->
-        <section id="trading-tools" class="card">
+        <section id="trading-tools" class="card section" style="display: none;">
             <h2>Herramientas de Trading</h2>
 
             <div class="form-group">
@@ -195,7 +203,7 @@
         </section>
 
         <!-- Market Watch & Visualization -->
-        <section id="market-watch" class="card">
+        <section id="market-watch" class="card section" style="display: none;">
             <h2>Visualización de Mercado</h2>
 
             <!-- Asset List -->
@@ -276,14 +284,14 @@
         </section>
 
         <!-- Resultados y Historial -->
-        <section id="results-section" class="card highlight">
+        <section id="results-section" class="card highlight section" style="display: block;">
             <h2>Resultado</h2>
             <div id="result-display" class="result-box">0.00</div>
             <button id="btn-save-history" class="btn-secondary">Guardar al Historial</button>
         </section>
 
         <!-- Tabla de Historial (Opcional visualización rápida) -->
-        <section id="history-section" class="card">
+        <section id="history-section" class="card section" style="display: block;">
             <h2>Historial Reciente</h2>
             <button id="btn-export-csv" class="btn-small">Descargar CSV</button>
             <ul id="history-list">
