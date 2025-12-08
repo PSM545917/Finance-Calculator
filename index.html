@@ -75,6 +75,74 @@
             <button id="btn-compound-interest" class="btn-primary">Calcular Interés Compuesto</button>
         </section>
 
+        <!-- Préstamos y Movimientos -->
+        <section id="loans-movements" class="card">
+            <h2>Préstamos y Movimientos</h2>
+
+            <!-- Loan Amortization Form -->
+            <div class="subsection">
+                <h3>Amortización de Préstamo</h3>
+                <div class="form-group">
+                    <label for="loan-principal">Monto del Préstamo ($)</label>
+                    <input type="number" id="loan-principal" placeholder="Ej. 10000">
+                </div>
+                <div class="form-group">
+                    <label for="loan-rate">Tasa de Interés Anual (%)</label>
+                    <input type="number" id="loan-rate" step="0.01" placeholder="Ej. 5">
+                </div>
+                <div class="form-group">
+                    <label for="loan-months">Plazo (Meses)</label>
+                    <input type="number" id="loan-months" placeholder="Ej. 12">
+                </div>
+                <button id="btn-loan-amortization" class="btn-primary">Calcular Amortización</button>
+
+                <!-- Amortization Table -->
+                <div class="table-container" style="margin-top: 20px;">
+                    <table id="amortization-table">
+                        <thead>
+                            <tr>
+                                <th>Mes</th>
+                                <th>Pago</th>
+                                <th>Capital</th>
+                                <th>Intereses</th>
+                            </tr>
+                        </thead>
+                        <tbody id="amortization-table-body">
+                            <!-- Amortization schedule will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Movement Tracking Form -->
+            <div class="subsection" style="margin-top: 30px;">
+                <h3>Registro de Movimientos</h3>
+                <div class="form-group">
+                    <label for="movement-type">Tipo de Movimiento</label>
+                    <select id="movement-type">
+                        <option value="ingreso">Ingreso</option>
+                        <option value="gasto">Gasto</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="movement-amount">Monto ($)</label>
+                    <input type="number" id="movement-amount" step="0.01" placeholder="Ej. 1000">
+                </div>
+                <div class="form-group">
+                    <label for="movement-description">Descripción</label>
+                    <input type="text" id="movement-description" placeholder="Ej. Salario mensual">
+                </div>
+                <button id="btn-track-movement" class="btn-primary">Registrar Movimiento</button>
+
+                <!-- Balance Display -->
+                <div class="balance-summary"
+                    style="margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 5px;">
+                    <h4>Balance Actual</h4>
+                    <div id="balance-display" class="result-box" style="font-size: 24px; color: #2c3e50;">$0.00</div>
+                </div>
+            </div>
+        </section>
+
         <!-- Resultados y Historial -->
         <section id="results-section" class="card highlight">
             <h2>Resultado</h2>

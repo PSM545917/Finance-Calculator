@@ -39,38 +39,65 @@ function loadHistory() {
 
 function exportHistoryToCSV() {
     const history = getHistory();
-    if (history.length === 0) {
+
+    // Get movements from LocalStorage (defined in calculations.js)
+    const movementsStored = localStorage.getItem('finance_calculator_movements');
+    const movements = movementsStored ? JSON.parse(movementsStored) : [];
+
+    if (history.length === 0 && movements.length === 0) {
         alert('No hay historial para exportar');
         return;
     }
 
-    // CSV Header - matching requested columns
-    const headers = ['Tipo', 'Monto', 'Tasa', 'Tiempo', 'Resultado', 'Fecha'];
+    // Create combined CSV with both calculations and movements
+    let csvContent = '';
 
-    // Parse details to extract monto, tasa, tiempo
-    const rows = history.map(item => {
-        // Extract values from details string (format: "P: 1000, r: 5%, t: 2 años")
-        const details = item.details || '';
-        const montoMatch = details.match(/P:\s*([0-9.]+)/);
-        const tasaMatch = details.match(/r:\s*([0-9.]+)%/);
-        const tiempoMatch = details.match(/t:\s*([0-9.]+)/);
+    // Section 1: Calculation History
+    if (history.length > 0) {
+        const calcHeaders = ['Tipo', 'Monto', 'Tasa', 'Tiempo', 'Resultado', 'Fecha'];
 
-        return [
-            `"${item.type}"`,
-            `"${montoMatch ? montoMatch[1] : 'N/A'}"`,
-            `"${tasaMatch ? tasaMatch[1] : 'N/A'}"`,
-            `"${tiempoMatch ? tiempoMatch[1] : 'N/A'}"`,
-            `"${item.result}"`,
-            `"${item.date}"`
-        ];
-    });
+        const calcRows = history.map(item => {
+            const details = item.details || '';
+            const montoMatch = details.match(/P:\s*([0-9.]+)/);
+            const tasaMatch = details.match(/r:\s*([0-9.]+)%/);
+            const tiempoMatch = details.match(/t:\s*([0-9.]+)/);
 
-    const csvContent = [
-        headers.join(','),
-        ...rows.map(row => row.join(','))
-    ].join('\n');
+            return [
+                `"${item.type}"`,
+                `"${montoMatch ? montoMatch[1] : 'N/A'}"`,
+                `"${tasaMatch ? tasaMatch[1] : 'N/A'}"`,
+                `"${tiempoMatch ? tiempoMatch[1] : 'N/A'}"`,
+                `"${item.result}"`,
+                `"${item.date}"`
+            ];
+        });
 
-    // Create Blob and Download using URL.createObjectURL
+        csvContent += 'HISTORIAL DE CALCULOS\n';
+        csvContent += calcHeaders.join(',') + '\n';
+        csvContent += calcRows.map(row => row.join(',')).join('\n');
+        csvContent += '\n\n';
+    }
+
+    // Section 2: Movement Tracking
+    if (movements.length > 0) {
+        const movHeaders = ['Tipo', 'Monto', 'Descripción', 'Balance', 'Fecha'];
+
+        const movRows = movements.map(item => {
+            return [
+                `"${item.tipo}"`,
+                `"${item.monto}"`,
+                `"${item.descripcion}"`,
+                `"${item.balance}"`,
+                `"${item.fecha}"`
+            ];
+        });
+
+        csvContent += 'MOVIMIENTOS Y BALANCE\n';
+        csvContent += movHeaders.join(',') + '\n';
+        csvContent += movRows.map(row => row.join(',')).join('\n');
+    }
+
+    // Create Blob and Download
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -80,7 +107,7 @@ function exportHistoryToCSV() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url); // Clean up
+    URL.revokeObjectURL(url);
 }
 
 // --- Event Listeners ---

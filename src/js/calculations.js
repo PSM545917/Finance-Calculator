@@ -115,6 +115,178 @@ function handleCompoundInterest() {
     updateResult(amount, 'Interés Compuesto', `P: ${principal}, r: ${rate}%, t: ${time} años, n: ${compounds}`);
 }
 
+// --- Loan Amortization Logic ---
+
+function amortizacionPrestamo(principal, tasaAnual, meses) {
+    // Validate inputs
+    if (isNaN(principal) || isNaN(tasaAnual) || isNaN(meses)) {
+        throw new Error('Todos los valores deben ser numéricos');
+    }
+
+    if (principal <= 0 || tasaAnual < 0 || meses <= 0) {
+        throw new Error('Los valores deben ser positivos');
+    }
+
+    // Convert annual rate to monthly rate (decimal)
+    const tasaMensual = (tasaAnual / 100) / 12;
+
+    // Calculate monthly payment using PMT formula
+    // PMT = P * r(1+r)^n / ((1+r)^n - 1)
+    let pagoMensual;
+
+    if (tasaMensual === 0) {
+        // Special case: 0% interest
+        pagoMensual = principal / meses;
+    } else {
+        const factor = Math.pow(1 + tasaMensual, meses);
+        pagoMensual = principal * (tasaMensual * factor) / (factor - 1);
+    }
+
+    // Generate amortization schedule
+    const schedule = [];
+    let saldoRestante = principal;
+
+    for (let mes = 1; mes <= meses; mes++) {
+        const interesMes = saldoRestante * tasaMensual;
+        const capitalMes = pagoMensual - interesMes;
+        saldoRestante -= capitalMes;
+
+        // Handle floating point precision for last payment
+        if (mes === meses) {
+            saldoRestante = 0;
+        }
+
+        schedule.push({
+            mes: mes,
+            pago: parseFloat(pagoMensual.toFixed(2)),
+            capital: parseFloat(capitalMes.toFixed(2)),
+            intereses: parseFloat(interesMes.toFixed(2))
+        });
+    }
+
+    return schedule;
+}
+
+function handleLoanAmortization() {
+    const principal = parseFloat(document.getElementById('loan-principal').value);
+    const tasaAnual = parseFloat(document.getElementById('loan-rate').value);
+    const meses = parseInt(document.getElementById('loan-months').value);
+
+    try {
+        const schedule = amortizacionPrestamo(principal, tasaAnual, meses);
+        displayAmortizationSchedule(schedule);
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+function displayAmortizationSchedule(schedule) {
+    const tableBody = document.getElementById('amortization-table-body');
+    if (!tableBody) return;
+
+    tableBody.innerHTML = '';
+
+    schedule.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${row.mes}</td>
+            <td>$${row.pago}</td>
+            <td>$${row.capital}</td>
+            <td>$${row.intereses}</td>
+        `;
+        tableBody.appendChild(tr);
+    });
+}
+
+// --- Movement Tracking Logic ---
+
+const MOVEMENTS_KEY = 'finance_calculator_movements';
+const BALANCE_KEY = 'finance_calculator_balance';
+
+function getBalance() {
+    const stored = localStorage.getItem(BALANCE_KEY);
+    return stored ? parseFloat(stored) : 0;
+}
+
+function getMovements() {
+    const stored = localStorage.getItem(MOVEMENTS_KEY);
+    return stored ? JSON.parse(stored) : [];
+}
+
+function trackMovimiento(tipo, monto, descripcion) {
+    // Validate inputs
+    if (!tipo || (tipo !== 'ingreso' && tipo !== 'gasto')) {
+        throw new Error('Tipo debe ser "ingreso" o "gasto"');
+    }
+
+    if (isNaN(monto) || monto <= 0) {
+        throw new Error('El monto debe ser un número positivo');
+    }
+
+    if (!descripcion || descripcion.trim() === '') {
+        throw new Error('La descripción es requerida');
+    }
+
+    // Get current balance and movements
+    let balance = getBalance();
+    const movements = getMovements();
+
+    // Update balance
+    if (tipo === 'ingreso') {
+        balance += monto;
+    } else {
+        balance -= monto;
+    }
+
+    // Store movement
+    const movement = {
+        tipo: tipo,
+        monto: parseFloat(monto.toFixed(2)),
+        descripcion: descripcion.trim(),
+        balance: parseFloat(balance.toFixed(2)),
+        fecha: new Date().toLocaleString()
+    };
+
+    movements.push(movement);
+
+    // Save to LocalStorage
+    localStorage.setItem(BALANCE_KEY, balance.toString());
+    localStorage.setItem(MOVEMENTS_KEY, JSON.stringify(movements));
+
+    return balance;
+}
+
+function handleMovementTracking() {
+    const tipo = document.getElementById('movement-type').value;
+    const monto = parseFloat(document.getElementById('movement-amount').value);
+    const descripcion = document.getElementById('movement-description').value;
+
+    try {
+        const newBalance = trackMovimiento(tipo, monto, descripcion);
+        updateBalanceDisplay(newBalance);
+
+        // Clear form
+        document.getElementById('movement-amount').value = '';
+        document.getElementById('movement-description').value = '';
+
+        alert(`Movimiento registrado. Balance actual: $${newBalance.toFixed(2)}`);
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+function updateBalanceDisplay(balance) {
+    const balanceDisplay = document.getElementById('balance-display');
+    if (balanceDisplay) {
+        balanceDisplay.textContent = `$${balance.toFixed(2)}`;
+    }
+}
+
+function loadBalanceOnStartup() {
+    const balance = getBalance();
+    updateBalanceDisplay(balance);
+}
+
 // --- Event Listeners ---
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -136,4 +308,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Compound Interest Button
     const btnCompound = document.getElementById('btn-compound-interest');
     if (btnCompound) btnCompound.addEventListener('click', handleCompoundInterest);
+
+    // Loan Amortization Button
+    const btnLoan = document.getElementById('btn-loan-amortization');
+    if (btnLoan) btnLoan.addEventListener('click', handleLoanAmortization);
+
+    // Movement Tracking Button
+    const btnMovement = document.getElementById('btn-track-movement');
+    if (btnMovement) btnMovement.addEventListener('click', handleMovementTracking);
+
+    // Load balance on startup
+    loadBalanceOnStartup();
 });

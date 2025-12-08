@@ -296,6 +296,142 @@ describe('Finance Calculator - Unit Tests', () => {
             expect(isNaN(value)).toBe(false);
         });
     });
+
+    // ==================== LOAN AMORTIZATION TESTS ====================
+
+    describe('Loan Amortization Calculation', () => {
+
+        // Helper function to simulate amortizacionPrestamo
+        function amortizacionPrestamo(principal, tasaAnual, meses) {
+            if (isNaN(principal) || isNaN(tasaAnual) || isNaN(meses)) {
+                throw new Error('Todos los valores deben ser numéricos');
+            }
+
+            if (principal <= 0 || tasaAnual < 0 || meses <= 0) {
+                throw new Error('Los valores deben ser positivos');
+            }
+
+            const tasaMensual = (tasaAnual / 100) / 12;
+            let pagoMensual;
+
+            if (tasaMensual === 0) {
+                pagoMensual = principal / meses;
+            } else {
+                const factor = Math.pow(1 + tasaMensual, meses);
+                pagoMensual = principal * (tasaMensual * factor) / (factor - 1);
+            }
+
+            const schedule = [];
+            let saldoRestante = principal;
+
+            for (let mes = 1; mes <= meses; mes++) {
+                const interesMes = saldoRestante * tasaMensual;
+                const capitalMes = pagoMensual - interesMes;
+                saldoRestante -= capitalMes;
+
+                if (mes === meses) {
+                    saldoRestante = 0;
+                }
+
+                schedule.push({
+                    mes: mes,
+                    pago: parseFloat(pagoMensual.toFixed(2)),
+                    capital: parseFloat(capitalMes.toFixed(2)),
+                    intereses: parseFloat(interesMes.toFixed(2))
+                });
+            }
+
+            return schedule;
+        }
+
+        test('should calculate standard loan amortization correctly ($10,000 at 5% for 12 months)', () => {
+            // Arrange
+            const principal = 10000;
+            const tasaAnual = 5;
+            const meses = 12;
+
+            // Act
+            const schedule = amortizacionPrestamo(principal, tasaAnual, meses);
+
+            // Assert
+            expect(schedule).toHaveLength(12);
+            expect(schedule[0].mes).toBe(1);
+            expect(schedule[11].mes).toBe(12);
+
+            // Verify monthly payment is consistent
+            const monthlyPayment = schedule[0].pago;
+            schedule.forEach(row => {
+                expect(row.pago).toBe(monthlyPayment);
+            });
+
+            // Verify total interest paid
+            const totalInterest = schedule.reduce((sum, row) => sum + row.intereses, 0);
+            expect(totalInterest).toBeGreaterThan(0);
+            expect(totalInterest).toBeLessThan(principal);
+
+            // Verify final balance is zero (all capital paid)
+            const totalCapital = schedule.reduce((sum, row) => sum + row.capital, 0);
+            expect(totalCapital).toBeCloseTo(principal, 0);
+        });
+
+        test('should calculate loan with different parameters ($5,000 at 8% for 24 months)', () => {
+            // Arrange
+            const principal = 5000;
+            const tasaAnual = 8;
+            const meses = 24;
+
+            // Act
+            const schedule = amortizacionPrestamo(principal, tasaAnual, meses);
+
+            // Assert
+            expect(schedule).toHaveLength(24);
+
+            // Verify interest decreases over time
+            expect(schedule[0].intereses).toBeGreaterThan(schedule[23].intereses);
+
+            // Verify capital increases over time
+            expect(schedule[0].capital).toBeLessThan(schedule[23].capital);
+
+            // Verify total payments equal principal + interest
+            const totalPaid = schedule.reduce((sum, row) => sum + row.pago, 0);
+            const totalCapital = schedule.reduce((sum, row) => sum + row.capital, 0);
+            const totalInterest = schedule.reduce((sum, row) => sum + row.intereses, 0);
+
+            expect(totalCapital).toBeCloseTo(principal, 0);
+            expect(totalPaid).toBeCloseTo(totalCapital + totalInterest, 0);
+        });
+
+        test('should handle edge cases (zero interest and single month)', () => {
+            // Test 1: Zero interest rate
+            const schedule1 = amortizacionPrestamo(1000, 0, 12);
+
+            expect(schedule1).toHaveLength(12);
+            expect(schedule1[0].pago).toBeCloseTo(1000 / 12, 2);
+            expect(schedule1[0].intereses).toBe(0);
+
+            // All payments should be equal with zero interest
+            schedule1.forEach(row => {
+                expect(row.intereses).toBe(0);
+                expect(row.pago).toBeCloseTo(1000 / 12, 2);
+            });
+
+            // Test 2: Single month term
+            const schedule2 = amortizacionPrestamo(1000, 5, 1);
+
+            expect(schedule2).toHaveLength(1);
+            expect(schedule2[0].mes).toBe(1);
+
+            // With 1 month, the payment should be principal + 1 month interest
+            const expectedInterest = 1000 * (5 / 100 / 12);
+            expect(schedule2[0].intereses).toBeCloseTo(expectedInterest, 2);
+            expect(schedule2[0].capital).toBeCloseTo(1000, 2);
+
+            // Test 3: Validation - should throw error for invalid inputs
+            expect(() => amortizacionPrestamo(-1000, 5, 12)).toThrow('Los valores deben ser positivos');
+            expect(() => amortizacionPrestamo(1000, 5, 0)).toThrow('Los valores deben ser positivos');
+            expect(() => amortizacionPrestamo('invalid', 5, 12)).toThrow('Todos los valores deben ser numéricos');
+        });
+    });
 });
 
 // Export for Jest
