@@ -76,10 +76,16 @@ header p {
 
 h2 {
     margin-bottom: 1.5rem;
-    color: var(--text-color);
+    color: var(--primary-color);
     font-size: 1.25rem;
-    border-bottom: 2px solid var(--bg-color);
+    border-bottom: 2px solid var(--border-color);
     padding-bottom: 0.75rem;
+}
+
+h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
 }
 
 /* Form Elements */
