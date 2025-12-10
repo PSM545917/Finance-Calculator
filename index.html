@@ -14,13 +14,17 @@
         <p>Herramienta financiera para cálculos rápidos y precisos.</p>
     </header>
 
-    <!-- Navigation Bar -->
-    <nav id="main-nav">
-        <button class="nav-btn active" data-section="basic-calc">Calculadora Básica</button>
-        <button class="nav-btn" data-section="loans-movements">Préstamos & Movimientos</button>
-        <button class="nav-btn" data-section="trading-tools">Trading Tools</button>
-        <button class="nav-btn" data-section="market-watch">Market Watch</button>
-    </nav>
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar">
+        <nav id="main-nav">
+            <ul>
+                <li><button class="nav-btn active" data-section="basic-calc">Calculadora Básica</button></li>
+                <li><button class="nav-btn" data-section="loans-movements">Préstamos & Movimientos</button></li>
+                <li><button class="nav-btn" data-section="trading-tools">Trading Tools</button></li>
+                <li><button class="nav-btn" data-section="market-watch">Market Watch</button></li>
+            </ul>
+        </nav>
+    </aside>
 
     <main class="container">
         <!-- Calculadora Básica -->
@@ -84,11 +88,11 @@
         </section>
 
         <!-- Préstamos y Movimientos -->
-        <section id="loans-movements" class="card section" style="display: none;">
+        <section id="loans-movements" class="card section grid-container" style="display: none;">
             <h2>Préstamos y Movimientos</h2>
 
             <!-- Loan Amortization Form -->
-            <div class="subsection">
+            <div class="subsection grid-item">
                 <h3>Amortización de Préstamo</h3>
                 <div class="form-group">
                     <label for="loan-principal">Monto del Préstamo ($)</label>
@@ -123,7 +127,7 @@
             </div>
 
             <!-- Movement Tracking Form -->
-            <div class="subsection" style="margin-top: 30px;">
+            <div class="subsection grid-item">
                 <h3>Registro de Movimientos</h3>
                 <div class="form-group">
                     <label for="movement-type">Tipo de Movimiento</label>
@@ -203,11 +207,11 @@
         </section>
 
         <!-- Market Watch & Visualization -->
-        <section id="market-watch" class="card section" style="display: none;">
+        <section id="market-watch" class="card section grid-container" style="display: none;">
             <h2>Visualización de Mercado</h2>
 
             <!-- Asset List -->
-            <div class="subsection">
+            <div class="subsection grid-item">
                 <h3>Lista de Activos</h3>
                 <div class="form-group">
                     <label for="new-asset-input">Agregar Activo (Símbolo)</label>
@@ -234,7 +238,7 @@
             </div>
 
             <!-- Chart Container -->
-            <div class="subsection" style="margin-top: 30px;">
+            <div class="subsection grid-item">
                 <h3>Gráfico TradingView</h3>
                 <div id="chart-container"
                     style="min-height: 400px; background: #f0f0f0; border-radius: 5px; display: flex; align-items: center; justify-content: center;">
@@ -243,7 +247,7 @@
             </div>
 
             <!-- Price Variation Display -->
-            <div class="subsection" style="margin-top: 20px;">
+            <div class="subsection grid-item">
                 <h3>Variación de Precio</h3>
                 <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
                     <div>

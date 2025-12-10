@@ -249,35 +249,49 @@ button {
         grid-column: span 6;
     }
 }
-/* Navigation Styles */
-#main-nav {
-    display: flex;
-    justify-content: space-around;
-    background: #f0f0f0;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    flex-wrap: wrap;
-    gap: 10px;
+
+/* Sidebar Navigation Styles */
+#sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 220px;
+    height: 100vh;
+    background: #f8f9fa;
+    padding: 20px 10px;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+#main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#main-nav li {
+    margin-bottom: 10px;
 }
 
 .nav-btn {
-    flex: 1;
-    min-width: 150px;
-    padding: 12px 20px;
+    width: 100%;
+    padding: 15px 20px;
     background: white;
     color: var(--text-color);
     border: 2px solid transparent;
-    border-radius: 6px;
+    border-radius: 8px;
     font-weight: 600;
+    font-size: 0.95rem;
+    text-align: left;
     transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .nav-btn:hover {
     background: #e0e7ff;
     border-color: var(--primary-color);
-    transform: translateY(-2px);
+    transform: translateX(5px);
 }
 
 .nav-btn.active {
@@ -287,24 +301,100 @@ button {
     box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
 }
 
+/* Main Content with Sidebar */
+body {
+    margin-left: 220px;
+}
+
+header {
+    margin-left: 0;
+}
+
+.container {
+    margin-left: 20px;
+}
+
+/* Grid Container for Sections */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+}
+
+.grid-container h2 {
+    grid-column: 1 / -1;
+}
+
+.grid-item {
+    padding: 10px;
+    margin: 0;
+}
+
 /* Section Styles */
 .section {
     padding: 20px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
+    margin: 10px;
     border-radius: 8px;
     background: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive Navigation */
+/* Form spacing improvements */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group input,
+.form-group select {
+    padding: 10px;
+}
+
+button {
+    margin: 15px 0;
+}
+
+/* Card styling for results */
+.result-box,
+.balance-summary,
+.trading-results {
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Container */
+.table-container {
+    padding: 10px;
+    margin: 15px 0;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-    #main-nav {
-        flex-direction: column;
+    #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    body {
+        margin-left: 0;
+    }
+    
+    .container {
+        margin-left: 0;
+    }
+    
+    .grid-container {
+        grid-template-columns: 1fr;
     }
     
     .nav-btn {
-        width: 100%;
-        min-width: unset;
+        text-align: center;
     }
 }
+
