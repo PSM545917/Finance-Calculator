@@ -686,6 +686,218 @@ describe('Finance Calculator - Unit Tests', () => {
         });
     });
 
+    // ==================== SCIENTIFIC FUNCTIONS TESTS ====================
+
+    describe('Trigonometric Functions', () => {
+
+        // Helper functions (same as in calculations.js)
+        function sin(x) {
+            return Math.sin(x * Math.PI / 180);
+        }
+
+        function cos(x) {
+            return Math.cos(x * Math.PI / 180);
+        }
+
+        function tan(x) {
+            return Math.tan(x * Math.PI / 180);
+        }
+
+        test('should calculate sin(90°) correctly', () => {
+            // Arrange
+            const angle = 90;
+            const expected = 1;
+
+            // Act
+            const result = sin(angle);
+
+            // Assert
+            expect(result).toBeCloseTo(expected, 5);
+        });
+
+        test('should calculate sin(0°) correctly', () => {
+            const result = sin(0);
+            expect(result).toBeCloseTo(0, 5);
+        });
+
+        test('should calculate cos(0°) correctly', () => {
+            // Arrange
+            const angle = 0;
+            const expected = 1;
+
+            // Act
+            const result = cos(angle);
+
+            // Assert
+            expect(result).toBeCloseTo(expected, 5);
+        });
+
+        test('should calculate cos(90°) correctly', () => {
+            const result = cos(90);
+            expect(result).toBeCloseTo(0, 5);
+        });
+
+        test('should calculate tan(45°) correctly', () => {
+            // Arrange
+            const angle = 45;
+            const expected = 1;
+
+            // Act
+            const result = tan(angle);
+
+            // Assert
+            expect(result).toBeCloseTo(expected, 5);
+        });
+
+        test('should calculate tan(0°) correctly', () => {
+            const result = tan(0);
+            expect(result).toBeCloseTo(0, 5);
+        });
+    });
+
+    describe('Exponential and Power Functions', () => {
+
+        // Helper functions
+        function square(x) {
+            return x * x;
+        }
+
+        function cube(x) {
+            return x * x * x;
+        }
+
+        function exp(x) {
+            return Math.exp(x);
+        }
+
+        function log(x) {
+            if (x <= 0) {
+                throw new Error('Logarithm of non-positive number');
+            }
+            return Math.log10(x);
+        }
+
+        function ln(x) {
+            if (x <= 0) {
+                throw new Error('Natural log of non-positive number');
+            }
+            return Math.log(x);
+        }
+
+        function sqrt(x) {
+            if (x < 0) {
+                throw new Error('Square root of negative number');
+            }
+            return Math.sqrt(x);
+        }
+
+        test('should calculate square(5) correctly', () => {
+            // Arrange
+            const value = 5;
+            const expected = 25;
+
+            // Act
+            const result = square(value);
+
+            // Assert
+            expect(result).toBe(expected);
+        });
+
+        test('should calculate cube(3) correctly', () => {
+            // Arrange
+            const value = 3;
+            const expected = 27;
+
+            // Act
+            const result = cube(value);
+
+            // Assert
+            expect(result).toBe(expected);
+        });
+
+        test('should calculate sqrt(16) correctly', () => {
+            // Arrange
+            const value = 16;
+            const expected = 4;
+
+            // Act
+            const result = sqrt(value);
+
+            // Assert
+            expect(result).toBe(expected);
+        });
+
+        test('should calculate sqrt(25) correctly', () => {
+            const result = sqrt(25);
+            expect(result).toBe(5);
+        });
+
+        test('should throw error for sqrt of negative number', () => {
+            expect(() => sqrt(-4)).toThrow('Square root of negative number');
+        });
+
+        test('should calculate exp(1) close to e', () => {
+            // Arrange
+            const value = 1;
+            const expected = Math.E; // 2.718281828...
+
+            // Act
+            const result = exp(value);
+
+            // Assert
+            expect(result).toBeCloseTo(expected, 5);
+        });
+
+        test('should calculate exp(0) correctly', () => {
+            const result = exp(0);
+            expect(result).toBe(1);
+        });
+
+        test('should calculate log(100) correctly', () => {
+            // Arrange
+            const value = 100;
+            const expected = 2; // log10(100) = 2
+
+            // Act
+            const result = log(value);
+
+            // Assert
+            expect(result).toBeCloseTo(expected, 5);
+        });
+
+        test('should calculate log(1000) correctly', () => {
+            const result = log(1000);
+            expect(result).toBeCloseTo(3, 5);
+        });
+
+        test('should throw error for log of non-positive number', () => {
+            expect(() => log(0)).toThrow('Logarithm of non-positive number');
+            expect(() => log(-5)).toThrow('Logarithm of non-positive number');
+        });
+
+        test('should calculate ln(e) correctly', () => {
+            // Arrange
+            const value = Math.E;
+            const expected = 1; // ln(e) = 1
+
+            // Act
+            const result = ln(value);
+
+            // Assert
+            expect(result).toBeCloseTo(expected, 5);
+        });
+
+        test('should calculate ln(1) correctly', () => {
+            const result = ln(1);
+            expect(result).toBe(0);
+        });
+
+        test('should throw error for ln of non-positive number', () => {
+            expect(() => ln(0)).toThrow('Natural log of non-positive number');
+            expect(() => ln(-2)).toThrow('Natural log of non-positive number');
+        });
+    });
+
 });
 
 // Export for Jest

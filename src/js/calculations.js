@@ -1,3 +1,278 @@
+// ==================== CALCULATOR STATE MANAGEMENT ====================
+
+// Calculator state
+let calcState = {
+    display: '0',
+    currentValue: null,
+    previousValue: null,
+    operator: null,
+    waitingForOperand: false
+};
+
+// Calculation history
+let calculationHistory = [];
+const HISTORY_KEY = 'finance_calculator_history';
+
+// Load history from localStorage
+function loadHistory() {
+    const stored = localStorage.getItem(HISTORY_KEY);
+    if (stored) {
+        calculationHistory = JSON.parse(stored);
+        updateHistoryDisplay();
+    }
+}
+
+// Save history to localStorage
+function saveHistory() {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(calculationHistory));
+}
+
+// Add to history
+function addToHistory(expression, result) {
+    const historyItem = {
+        expression: expression,
+        result: result,
+        timestamp: new Date().toLocaleString()
+    };
+    calculationHistory.unshift(historyItem); // Add to beginning
+    if (calculationHistory.length > 50) {
+        calculationHistory.pop(); // Keep only last 50
+    }
+    saveHistory();
+    updateHistoryDisplay();
+}
+
+// Update history display
+function updateHistoryDisplay() {
+    const historyList = document.getElementById('calc-history');
+    if (!historyList) return;
+
+    historyList.innerHTML = '';
+    calculationHistory.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <div class="expression">${item.expression}</div>
+            <div class="result">= ${item.result}</div>
+        `;
+        historyList.appendChild(li);
+    });
+}
+
+// Clear history
+function clearHistory() {
+    calculationHistory = [];
+    saveHistory();
+    updateHistoryDisplay();
+}
+
+// ==================== SCIENTIFIC FUNCTIONS ====================
+
+function sin(x) {
+    // Convert degrees to radians
+    return Math.sin(x * Math.PI / 180);
+}
+
+function cos(x) {
+    return Math.cos(x * Math.PI / 180);
+}
+
+function tan(x) {
+    return Math.tan(x * Math.PI / 180);
+}
+
+function square(x) {
+    return x * x;
+}
+
+function cube(x) {
+    return x * x * x;
+}
+
+function exp(x) {
+    return Math.exp(x);
+}
+
+function log(x) {
+    if (x <= 0) {
+        throw new Error('Logarithm of non-positive number');
+    }
+    return Math.log10(x);
+}
+
+function ln(x) {
+    if (x <= 0) {
+        throw new Error('Natural log of non-positive number');
+    }
+    return Math.log(x);
+}
+
+function sqrt(x) {
+    if (x < 0) {
+        throw new Error('Square root of negative number');
+    }
+    return Math.sqrt(x);
+}
+
+// ==================== CALCULATOR LOGIC ====================
+
+function updateDisplay(value) {
+    const display = document.getElementById('calc-display');
+    if (display) {
+        display.textContent = value;
+    }
+    calcState.display = value;
+}
+
+function handleNumber(num) {
+    if (calcState.waitingForOperand) {
+        updateDisplay(String(num));
+        calcState.waitingForOperand = false;
+    } else {
+        const displayValue = calcState.display === '0' ? String(num) : calcState.display + num;
+        updateDisplay(displayValue);
+    }
+}
+
+function handleOperator(nextOperator) {
+    const inputValue = parseFloat(calcState.display);
+
+    if (calcState.currentValue === null) {
+        calcState.currentValue = inputValue;
+    } else if (calcState.operator) {
+        const result = performCalculation();
+        updateDisplay(String(result));
+        calcState.currentValue = result;
+    }
+
+    calcState.waitingForOperand = true;
+    calcState.operator = nextOperator;
+}
+
+function performCalculation() {
+    const prev = calcState.currentValue;
+    const current = parseFloat(calcState.display);
+
+    let result = 0;
+    switch (calcState.operator) {
+        case 'add':
+            result = prev + current;
+            break;
+        case 'subtract':
+            result = prev - current;
+            break;
+        case 'multiply':
+            result = prev * current;
+            break;
+        case 'divide':
+            if (current === 0) {
+                alert('No se puede dividir por cero');
+                return prev;
+            }
+            result = prev / current;
+            break;
+        default:
+            return current;
+    }
+
+    return result;
+}
+
+function handleEquals() {
+    if (calcState.operator && calcState.currentValue !== null) {
+        const prev = calcState.currentValue;
+        const current = parseFloat(calcState.display);
+        const result = performCalculation();
+
+        // Create expression string
+        const operatorSymbols = {
+            'add': '+',
+            'subtract': '-',
+            'multiply': '×',
+            'divide': '÷'
+        };
+        const expression = `${prev} ${operatorSymbols[calcState.operator]} ${current}`;
+
+        updateDisplay(String(result));
+        addToHistory(expression, result.toFixed(2));
+
+        calcState.currentValue = null;
+        calcState.operator = null;
+        calcState.waitingForOperand = true;
+    }
+}
+
+function handleFunction(func) {
+    const value = parseFloat(calcState.display);
+    let result;
+
+    try {
+        switch (func) {
+            case 'sin':
+                result = sin(value);
+                addToHistory(`sin(${value}°)`, result.toFixed(6));
+                break;
+            case 'cos':
+                result = cos(value);
+                addToHistory(`cos(${value}°)`, result.toFixed(6));
+                break;
+            case 'tan':
+                result = tan(value);
+                addToHistory(`tan(${value}°)`, result.toFixed(6));
+                break;
+            case 'sqrt':
+                result = sqrt(value);
+                addToHistory(`√${value}`, result.toFixed(6));
+                break;
+            case 'square':
+                result = square(value);
+                addToHistory(`${value}²`, result.toFixed(6));
+                break;
+            case 'cube':
+                result = cube(value);
+                addToHistory(`${value}³`, result.toFixed(6));
+                break;
+            case 'exp':
+                result = exp(value);
+                addToHistory(`e^${value}`, result.toFixed(6));
+                break;
+            case 'log':
+                result = log(value);
+                addToHistory(`log(${value})`, result.toFixed(6));
+                break;
+            case 'ln':
+                result = ln(value);
+                addToHistory(`ln(${value})`, result.toFixed(6));
+                break;
+        }
+
+        updateDisplay(String(result));
+        calcState.waitingForOperand = true;
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+function handleUtility(action) {
+    switch (action) {
+        case 'ac':
+            calcState.display = '0';
+            calcState.currentValue = null;
+            calcState.previousValue = null;
+            calcState.operator = null;
+            calcState.waitingForOperand = false;
+            updateDisplay('0');
+            break;
+        case 'sign':
+            const value = parseFloat(calcState.display);
+            updateDisplay(String(value * -1));
+            break;
+        case 'percent':
+            const percentValue = parseFloat(calcState.display) / 100;
+            updateDisplay(String(percentValue));
+            break;
+    }
+}
+
 // Global state to store the last calculation for history
 // Feature: Simple Interest - Enhanced validation added
 let currentCalculation = null;
@@ -660,4 +935,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load balance on startup
     loadBalanceOnStartup();
+
+    // ==================== CALCULATOR EVENT LISTENERS ====================
+
+    // Number buttons
+    const numberButtons = document.querySelectorAll('.calc-button.number');
+    numberButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const num = btn.dataset.num;
+            handleNumber(num);
+        });
+    });
+
+    // Operator buttons
+    const operatorButtons = document.querySelectorAll('.calc-button.operator');
+    operatorButtons.forEach(btn => {
+        const op = btn.dataset.op;
+        if (op) {
+            btn.addEventListener('click', () => handleOperator(op));
+        }
+    });
+
+    // Function buttons
+    const functionButtons = document.querySelectorAll('.calc-button.function');
+    functionButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const func = btn.dataset.func;
+            handleFunction(func);
+        });
+    });
+
+    // Utility buttons
+    const utilityButtons = document.querySelectorAll('.calc-button.utility');
+    utilityButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const action = btn.dataset.action;
+            handleUtility(action);
+        });
+    });
+
+    // Equals button
+    const equalsButton = document.querySelector('.calc-button.equals');
+    if (equalsButton) {
+        equalsButton.addEventListener('click', handleEquals);
+    }
+
+    // Clear history button
+    const clearHistoryBtn = document.getElementById('btn-clear-history');
+    if (clearHistoryBtn) {
+        clearHistoryBtn.addEventListener('click', clearHistory);
+    }
+
+    // Load calculation history
+    loadHistory();
 });

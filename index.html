@@ -27,18 +27,56 @@
     </aside>
 
     <main class="container">
-        <!-- Calculadora Básica -->
-        <section id="basic-calc" class="card section" style="display: block;">
-            <h2>Calculadora Básica</h2>
-            <div class="form-group">
-                <input type="number" id="basic-num1" placeholder="Número 1">
-                <input type="number" id="basic-num2" placeholder="Número 2">
-            </div>
-            <div class="btn-group">
-                <button id="btn-add">+</button>
-                <button id="btn-subtract">-</button>
-                <button id="btn-multiply">×</button>
-                <button id="btn-divide">÷</button>
+        <!-- Calculadora Básica - Apple Style -->
+        <section id="basic-calc" class="card section apple-calc" style="display: block;">
+            <h2>Calculadora Científica</h2>
+
+            <!-- Calculator Display -->
+            <div class="calc-display" id="calc-display">0</div>
+
+            <!-- Calculator Button Grid -->
+            <div class="calc-grid">
+                <!-- Row 1: Scientific Functions -->
+                <button class="calc-button function" data-func="sin">sin</button>
+                <button class="calc-button function" data-func="cos">cos</button>
+                <button class="calc-button function" data-func="tan">tan</button>
+                <button class="calc-button function" data-func="sqrt">√</button>
+
+                <!-- Row 2: More Scientific Functions -->
+                <button class="calc-button function" data-func="square">x²</button>
+                <button class="calc-button function" data-func="cube">x³</button>
+                <button class="calc-button function" data-func="exp">e^x</button>
+                <button class="calc-button function" data-func="log">log</button>
+
+                <!-- Row 3: Additional Functions -->
+                <button class="calc-button function" data-func="ln">ln</button>
+                <button class="calc-button utility" data-action="ac">AC</button>
+                <button class="calc-button utility" data-action="sign">+/-</button>
+                <button class="calc-button utility" data-action="percent">%</button>
+
+                <!-- Row 4: Numbers and Operators -->
+                <button class="calc-button number" data-num="7">7</button>
+                <button class="calc-button number" data-num="8">8</button>
+                <button class="calc-button number" data-num="9">9</button>
+                <button class="calc-button operator" data-op="divide">÷</button>
+
+                <!-- Row 5 -->
+                <button class="calc-button number" data-num="4">4</button>
+                <button class="calc-button number" data-num="5">5</button>
+                <button class="calc-button number" data-num="6">6</button>
+                <button class="calc-button operator" data-op="multiply">×</button>
+
+                <!-- Row 6 -->
+                <button class="calc-button number" data-num="1">1</button>
+                <button class="calc-button number" data-num="2">2</button>
+                <button class="calc-button number" data-num="3">3</button>
+                <button class="calc-button operator" data-op="subtract">-</button>
+
+                <!-- Row 7 -->
+                <button class="calc-button number zero" data-num="0">0</button>
+                <button class="calc-button number" data-num=".">.</button>
+                <button class="calc-button operator" data-op="add">+</button>
+                <button class="calc-button operator equals" data-action="equals">=</button>
             </div>
         </section>
 
@@ -303,6 +341,15 @@
             </ul>
         </section>
     </main>
+
+    <!-- History Panel -->
+    <aside id="history-panel">
+        <h3>Historial</h3>
+        <ul id="calc-history">
+            <!-- History items will be populated here -->
+        </ul>
+        <button id="btn-clear-history" class="btn-small">Limpiar</button>
+    </aside>
 
     <footer>
         <p>&copy; 2024 Finance Calculator MVP</p>
