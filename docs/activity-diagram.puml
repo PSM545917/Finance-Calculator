@@ -73,13 +73,13 @@ endif
 
 stop
 
-note right of start
+floating note right
   **Función:** exportHistoryToCSV()
   **Archivo:** history.js
   **Trigger:** Click en botón "Descargar CSV"
 end note
 
-note left of stop
+floating note left
   **Resultado:**
   Archivo CSV descargado con formato:
   
