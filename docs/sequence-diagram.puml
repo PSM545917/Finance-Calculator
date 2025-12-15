@@ -1,10 +1,11 @@
 @startuml Finance Calculator - Sequence Diagram
 
-title Calcular Interés Compuesto y Guardar en Historial
+title Flujos de Cálculo (Interés Compuesto y ROI)
 
 actor Usuario
 participant "UI\n(index.html)" as UI
 participant "Calculations\n(calculations.js)" as Calc
+participant "ROI Logic\n(roi-calculator.js)" as ROI
 participant "History\n(history.js)" as History
 database "LocalStorage\n(Browser)" as Storage
 
@@ -22,8 +23,12 @@ Usuario -> UI: Click en\n"Calcular Interés Compuesto"
 UI -> UI: addEventListener('click')
 note right: Event listener captura\nel evento del botón
 
-UI -> Calc: handleCompoundInterest()
-activate Calc
+    UI -> Calc: handleCompoundInterest()
+    activate Calc
+else Click en "Calcular ROI"
+    UI -> ROI: calculateROI()
+    activate ROI
+end
 
 == Fase 3: Validación de Inputs ==
 
@@ -52,7 +57,27 @@ else Valores válidos
         note right: Fórmula:\nA = P * (1 + r/n)^(n*t)
         
         Calc -> Calc: amount = 1000 * (1 + 0.05/1)^(1*10)
-        Calc -> Calc: amount = 1628.89
+                Calc -> Calc: amount = 1628.89
+        
+        Calc -> Calc: updateResult(amount, type, details)
+    else ROI Mode
+        ROI -> ROI: Obtiene valores (Initial, Final, Time)
+        ROI -> ROI: Validaciones (NaN, Positivos)
+        
+        alt Valid
+            ROI -> ROI: calculateROI()
+            note right: Simple: ((Final - Initial) / Initial) * 100\nAnualizado: ((Final/Initial)^(1/t) - 1) * 100
+            
+            ROI -> UI: updateROIUI(roi, classification)
+            UI -> Usuario: Muestra % ROI y Barra de Progreso
+            
+            ROI -> ROI: saveROIHistory()
+            ROI -> History: saveCalculationToHistory()
+        end
+        deactivate ROI
+    end
+    
+    opt Compound Interest Result Update
         
         == Fase 5: Actualización de Resultado ==
         

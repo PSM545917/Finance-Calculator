@@ -15,6 +15,12 @@ package "Finance Calculator Application" {
         portin " " as calc_input
         portout " " as calc_output
     }
+
+    ' Capa de ROI
+    component "ROI Logic\n(roi-calculator.js)" as ROI {
+        portin " " as roi_input
+        portout " " as roi_output
+    }
     
     ' Capa de Historial
     component "History Management\n(history.js)" as History {

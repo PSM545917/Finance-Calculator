@@ -25,6 +25,17 @@ class Calculation {
     + updateResult(value: number, type: string, details: string): void
 }
 
+' Clase de ROI
+class ROICalculator {
+    - currentROIMode: string
+    
+    + switchROIMode(mode: string): void
+    + calculateROI(): void
+    + updateROIUI(data: object): void
+    + formatCurrency(value: number): string
+    + saveROIHistory(data: object): void
+}
+
 ' Clase de Gestión de Historial
 class HistoryManager {
     - historyKey: string
@@ -71,7 +82,10 @@ Calculation --> CalculationRecord : creates
 HistoryManager --> CalculationRecord : manages
 UIManager --> Calculation : uses
 UIManager --> HistoryManager : uses
+UIManager --> HistoryManager : uses
 Calculation --> Validator : uses
+UIManager --> ROICalculator : interactua
+ROICalculator --> HistoryManager : uses
 
 ' Notas explicativas
 note right of Calculation
