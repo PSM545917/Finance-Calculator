@@ -160,4 +160,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnExportCSV) {
         btnExportCSV.addEventListener('click', exportHistoryToCSV);
     }
+
+    // Clear History Button
+    const btnClearHistory = document.getElementById('btn-clear-history');
+    if (btnClearHistory) {
+        btnClearHistory.addEventListener('click', () => {
+            if (confirm('¿Estás seguro de que quieres borrar todo el historial?')) {
+                localStorage.removeItem(HISTORY_KEY);
+                localStorage.removeItem('finance_calculator_movements');
+                localStorage.removeItem('finance_calculator_trades');
+                loadHistory();
+                alert('Historial borrado correctamente');
+            }
+        });
+    }
 });

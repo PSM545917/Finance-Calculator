@@ -691,6 +691,24 @@ function switchSection(sectionId) {
         }, 10);
     }
 
+    // Handle specific section initializations
+    if (sectionId === 'currency-converter' && typeof displayConversionHistory === 'function') {
+        displayConversionHistory();
+    }
+
+    // Toggle History Panel Visibility
+    const appLayout = document.querySelector('.app-layout');
+    if (sectionId === 'basic-calc') {
+        appLayout.classList.remove('hide-history');
+    } else {
+        appLayout.classList.add('hide-history');
+    }
+
+    // Handle ROI Calculator specific reset
+    if (sectionId === 'roi-calculator' && typeof switchROIMode === 'function') {
+        switchROIMode('simple');
+    }
+
     // Update active button state
     const allButtons = document.querySelectorAll('.nav-btn');
     allButtons.forEach(btn => {

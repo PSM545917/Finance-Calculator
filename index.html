@@ -31,8 +31,14 @@
                         </button>
                     </li>
                     <li>
+                    <li>
                         <button class="nav-btn" data-section="currency-converter">
                             <span>💱</span> Conversor
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn" data-section="roi-calculator" data-i18n="sidebar.roi">
+                            <span>📊</span> ROI
                         </button>
                     </li>
                 </ul>
@@ -230,6 +236,190 @@
                 </div>
             </section>
 
+            <!-- Currency Converter -->
+            <section id="currency-converter" class="section">
+                <div class="card">
+                    <h2>Conversor de Monedas</h2>
+
+                    <div class="grid-2">
+                        <!-- Left Column: Inputs -->
+                        <div class="subsection">
+                            <h3>Datos de Conversión</h3>
+                            <div class="form-group">
+                                <label for="currency-amount">Monto a Convertir</label>
+                                <input type="number" id="currency-amount" placeholder="Ej. 100" step="0.01" min="0">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="currency-from">De (Moneda Origen)</label>
+                                <select id="currency-from">
+                                    <option value="USD" selected>USD - Dólar Estadounidense</option>
+                                    <option value="EUR">EUR - Euro</option>
+                                    <option value="GBP">GBP - Libra Esterlina</option>
+                                    <option value="JPY">JPY - Yen Japonés</option>
+                                    <option value="CAD">CAD - Dólar Canadiense</option>
+                                    <option value="CNY">CNY - Yuan Chino</option>
+                                    <option value="BOB">BOB - Boliviano</option>
+                                    <option value="PEN">PEN - Sol Peruano</option>
+                                    <option value="BRL">BRL - Real Brasileño</option>
+                                    <option value="CLP">CLP - Peso Chileno</option>
+                                    <option value="ARS">ARS - Peso Argentino</option>
+                                    <option value="COP">COP - Peso Colombiano</option>
+                                </select>
+                            </div>
+
+                            <div style="text-align: center; margin: 1rem 0;">
+                                <button id="btn-swap-currencies" class="btn-secondary"
+                                    style="width: auto; padding: 0.5rem 2rem;">🔄 Invertir Monedas</button>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="currency-to">A (Moneda Destino)</label>
+                                <select id="currency-to">
+                                    <option value="USD">USD - Dólar Estadounidense</option>
+                                    <option value="EUR">EUR - Euro</option>
+                                    <option value="GBP">GBP - Libra Esterlina</option>
+                                    <option value="JPY">JPY - Yen Japonés</option>
+                                    <option value="CAD">CAD - Dólar Canadiense</option>
+                                    <option value="CNY">CNY - Yuan Chino</option>
+                                    <option value="BOB" selected>BOB - Boliviano</option>
+                                    <option value="PEN">PEN - Sol Peruano</option>
+                                    <option value="BRL">BRL - Real Brasileño</option>
+                                    <option value="CLP">CLP - Peso Chileno</option>
+                                    <option value="ARS">ARS - Peso Argentino</option>
+                                    <option value="COP">COP - Peso Colombiano</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <button id="btn-convert-currency" class="btn-primary">Convertir Moneda</button>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Results -->
+                        <div class="subsection">
+                            <h3>Resultado de la Conversión</h3>
+                            <div id="conversion-result"
+                                style="display: none; margin-top: 1rem; padding: 2rem; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-radius: 12px; text-align: center;">
+                                <div style="margin-bottom: 1rem;">
+                                    <span id="result-amount"
+                                        style="font-size: 2.5rem; font-weight: 700; color: #2563ea; font-family: monospace;">0.00</span>
+                                    <span id="result-currency"
+                                        style="font-size: 1.5rem; margin-left: 0.5rem; color: #64748b;">USD</span>
+                                </div>
+                                <div id="exchange-rate-display"
+                                    style="font-size: 0.9rem; color: #64748b; margin-top: 0.5rem;">
+                                    Tasa: 1.0000
+                                </div>
+                            </div>
+
+                            <div class="subsection" style="margin-top: 2rem;">
+                                <h4>Últimas Conversiones</h4>
+                                <ul id="currency-history-list" style="list-style: none; padding: 0;">
+                                    <!-- Populated by JS -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            </section>
+
+            <!-- ROI Calculator -->
+            <section id="roi-calculator" class="section">
+                <div class="card">
+                    <h2 data-i18n="roi.title">Calculadora de ROI</h2>
+
+                    <div class="roi-tabs">
+                        <button class="roi-tab active" data-tab="simple" data-i18n="roi.tabs.simple">ROI Simple</button>
+                        <button class="roi-tab" data-tab="annualized" data-i18n="roi.tabs.annualized">ROI
+                            Anualizado</button>
+                    </div>
+
+                    <div class="grid-2">
+                        <!-- Left Column: Form -->
+                        <div class="subsection">
+                            <h3 data-i18n="roi.form.title">Datos de la Inversión</h3>
+                            <div class="form-group">
+                                <label for="roi-initial" data-i18n="roi.form.initial">Inversión Inicial ($)</label>
+                                <input type="number" id="roi-initial" placeholder="Ej. 10000" step="0.01" min="0"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="roi-final" data-i18n="roi.form.final">Valor Final ($)</label>
+                                <input type="number" id="roi-final" placeholder="Ej. 15000" step="0.01" min="0"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="roi-costs" data-i18n="roi.form.costs">Costos Adicionales ($) -
+                                    Opcional</label>
+                                <input type="number" id="roi-costs" placeholder="Ej. 500" step="0.01" min="0">
+                            </div>
+                            <div class="form-group" id="roi-time-group" style="display: none;">
+                                <label for="roi-time" data-i18n="roi.form.time">Tiempo de Inversión (Años)</label>
+                                <input type="number" id="roi-time" placeholder="Ej. 2" step="0.1" min="0.1">
+                            </div>
+                            <div class="form-group">
+                                <button id="btn-calculate-roi" class="btn-primary"
+                                    data-i18n="roi.form.calculate">Calcular ROI</button>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Results -->
+                        <div class="subsection">
+                            <h3 data-i18n="roi.results.title">Resultados</h3>
+
+                            <div id="roi-empty-state" style="text-align: center; padding: 3rem; color: #94a3b8;">
+                                <p data-i18n="roi.results.empty">Ingresa los datos de tu inversión para calcular el ROI
+                                </p>
+                            </div>
+
+                            <div id="roi-results" style="display: none;">
+                                <div class="roi-result-main">
+                                    <div class="roi-percentage" id="roi-percentage-display">0.00%</div>
+                                    <div class="roi-classification" id="roi-classification">Clasificación</div>
+                                </div>
+
+                                <div class="roi-progress-bar">
+                                    <div class="roi-progress-fill" id="roi-progress-fill" style="width: 0%;"></div>
+                                </div>
+
+                                <div class="roi-details">
+                                    <div class="roi-detail-item">
+                                        <strong data-i18n="roi.results.netGain">Ganancia Neta:</strong>
+                                        <span id="roi-net-gain">$0.00</span>
+                                    </div>
+                                    <div class="roi-detail-item">
+                                        <strong data-i18n="roi.results.totalInvestment">Inversión Total:</strong>
+                                        <span id="roi-total-investment">$0.00</span>
+                                    </div>
+                                    <div class="roi-detail-item">
+                                        <strong data-i18n="roi.results.finalValue">Valor Final:</strong>
+                                        <span id="roi-final-value-display">$0.00</span>
+                                    </div>
+                                    <div class="roi-detail-item">
+                                        <strong data-i18n="roi.results.totalReturn">Retorno Total:</strong>
+                                        <span id="roi-total-return">0.00%</span>
+                                    </div>
+                                </div>
+
+                                <div id="roi-annualized-details" style="display: none;">
+                                    <div class="roi-detail-item">
+                                        <strong>ROI Anualizado (CAGR):</strong>
+                                        <span id="roi-annualized-display">0.00% / año</span>
+                                    </div>
+                                </div>
+
+                                <div class="roi-interpretation" id="roi-interpretation">
+                                    <!-- Dynamic message -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Resultados y Historial (Global) -->
             <section id="results-section" class="card section mt-4">
                 <h2>Resultado Global</h2>
@@ -237,13 +427,25 @@
                 <button id="btn-save-history" class="btn-secondary">Guardar al Historial</button>
             </section>
 
-            <footer>
-                <p>&copy; 2025 Finance Calculator MVP</p>
-            </footer>
         </main>
 
-        <script src="src/js/calculations.js"></script>
-        <script src="src/js/history.js"></script>
+        <aside id="history-panel">
+            <h3>Historial</h3>
+            <ul id="calc-history"></ul>
+            <button id="btn-clear-history" class="btn-small w-full">Limpiar Todo</button>
+        </aside>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Finance Calculator MVP</p>
+    </footer>
+
+    <script src="src/js/calculations.js"></script>
+    <script src="src/js/history.js"></script>
+    <script src="src/js/calculations.js"></script>
+    <script src="src/js/history.js"></script>
+    <script src="src/js/currency-converter.js"></script>
+    <script src="src/js/roi-calculator.js"></script>
 </body>
 
 </html>
