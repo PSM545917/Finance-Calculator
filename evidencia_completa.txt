@@ -1,0 +1,46 @@
+=== REPORTE DE EVIDENCIA INDIVIDUAL === 
+Proyecto: Finance Calculator 
+Autor: Pablo Schmidt 
+Fecha: Wed 12/10/2025 
+ 
+=== ESTADISTICAS DE COMMITS === 
+    26	PSM545917
+ 
+=== BRANCHES === 
+  feature/basic-calc
+  feature/compound-interest
+  feature/history-csv
+* feature/hub-expansion
+  feature/simple-interest
+  feature/ui-styles
+  master
+  remotes/origin/feature/basic-calc
+  remotes/origin/feature/compound-interest
+  remotes/origin/feature/history-csv
+  remotes/origin/feature/hub-expansion
+  remotes/origin/feature/simple-interest
+  remotes/origin/feature/ui-styles
+  remotes/origin/master
+ 
+=== COMMITS RECIENTES === 
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s
+%h | %ad | %an | %s 
+=== ARCHIVOS MODIFICADOS === 

@@ -1,0 +1,14 @@
+  feature/basic-calc                       6c6e29b fix: restore index.html structure
+  feature/compound-interest                3f23138 feat: implementar interés compuesto
+  feature/history-csv                      0b4bd4a fix: restore complete index.html structure
+* feature/hub-expansion                    cbfd50a fix: update h2/h3 headings to orange for better visibility
+  feature/simple-interest                  7d7ad02 docs: add simple interest comment
+  feature/ui-styles                        1f7deed style: agregar estilos responsive para UI
+  master                                   0ec5717 ci: add GitHub Actions workflow for automated testing
+  remotes/origin/feature/basic-calc        6c6e29b fix: restore index.html structure
+  remotes/origin/feature/compound-interest 3f23138 feat: implementar interés compuesto
+  remotes/origin/feature/history-csv       0b4bd4a fix: restore complete index.html structure
+  remotes/origin/feature/hub-expansion     cbfd50a fix: update h2/h3 headings to orange for better visibility
+  remotes/origin/feature/simple-interest   7d7ad02 docs: add simple interest comment
+  remotes/origin/feature/ui-styles         1f7deed style: agregar estilos responsive para UI
+  remotes/origin/master                    0ec5717 ci: add GitHub Actions workflow for automated testing
