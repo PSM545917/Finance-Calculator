@@ -9,269 +9,161 @@
 </head>
 
 <body>
-    <header>
-        <h1>Finance Calculator</h1>
-        <p>Herramienta financiera para cálculos rápidos y precisos.</p>
-    </header>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar">
+            <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: #fff;">FinanceApp</h2>
+            <nav id="main-nav">
+                <ul>
+                    <li>
+                        <button class="nav-btn active" data-section="basic-calc">
+                            <span>🔢</span> Básica
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn" data-section="loans-movements">
+                            <span>💸</span> Préstamos
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn" data-section="trading-tools">
+                            <span>📈</span> Trading
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
-    <!-- Sidebar Navigation -->
-    <aside id="sidebar">
-        <nav id="main-nav">
-            <ul>
-                <li><button class="nav-btn active" data-section="basic-calc">Calculadora Básica</button></li>
-                <li><button class="nav-btn" data-section="loans-movements">Préstamos & Movimientos</button></li>
-                <li><button class="nav-btn" data-section="trading-tools">Trading Tools</button></li>
-            </ul>
-        </nav>
-    </aside>
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <h1>Finance Calculator</h1>
+                <p>Herramienta financiera para cálculos rápidos y precisos.</p>
+            </header>
+            <!-- Calculadora Básica - Apple Style -->
+            <section id="basic-calc" class="section">
+                <div class="apple-calc">
+                    <h2>Calculadora Científica</h2>
 
-    <main class="container">
-        <!-- Calculadora Básica - Apple Style -->
-        <section id="basic-calc" class="card section apple-calc" style="display: block;">
-            <h2>Calculadora Científica</h2>
+                    <!-- Calculator Display -->
+                    <div class="calc-display" id="calc-display">0</div>
 
-            <!-- Calculator Display -->
-            <div class="calc-display" id="calc-display">0</div>
+                    <!-- Calculator Button Grid -->
+                    <div class="calc-grid">
+                        <!-- Row 1: Scientific Functions -->
+                        <button class="calc-button function" data-func="sin">sin</button>
+                        <button class="calc-button function" data-func="cos">cos</button>
+                        <button class="calc-button function" data-func="tan">tan</button>
+                        <button class="calc-button function" data-func="sqrt">√</button>
 
-            <!-- Calculator Button Grid -->
-            <div class="calc-grid">
-                <!-- Row 1: Scientific Functions -->
-                <button class="calc-button function" data-func="sin">sin</button>
-                <button class="calc-button function" data-func="cos">cos</button>
-                <button class="calc-button function" data-func="tan">tan</button>
-                <button class="calc-button function" data-func="sqrt">√</button>
+                        <!-- Row 2: More Scientific Functions -->
+                        <button class="calc-button function" data-func="square">x²</button>
+                        <button class="calc-button function" data-func="cube">x³</button>
+                        <button class="calc-button function" data-func="exp">e^x</button>
+                        <button class="calc-button function" data-func="log">log</button>
 
-                <!-- Row 2: More Scientific Functions -->
-                <button class="calc-button function" data-func="square">x²</button>
-                <button class="calc-button function" data-func="cube">x³</button>
-                <button class="calc-button function" data-func="exp">e^x</button>
-                <button class="calc-button function" data-func="log">log</button>
+                        <!-- Row 3: Additional Functions -->
+                        <button class="calc-button function" data-func="ln">ln</button>
+                        <button class="calc-button utility" data-action="ac">AC</button>
+                        <button class="calc-button utility" data-action="sign">+/-</button>
+                        <button class="calc-button utility" data-action="percent">%</button>
 
-                <!-- Row 3: Additional Functions -->
-                <button class="calc-button function" data-func="ln">ln</button>
-                <button class="calc-button utility" data-action="ac">AC</button>
-                <button class="calc-button utility" data-action="sign">+/-</button>
-                <button class="calc-button utility" data-action="percent">%</button>
+                        <!-- Row 4: Numbers and Operators -->
+                        <button class="calc-button number" data-num="7">7</button>
+                        <button class="calc-button number" data-num="8">8</button>
+                        <button class="calc-button number" data-num="9">9</button>
+                        <button class="calc-button operator" data-op="divide">÷</button>
 
-                <!-- Row 4: Numbers and Operators -->
-                <button class="calc-button number" data-num="7">7</button>
-                <button class="calc-button number" data-num="8">8</button>
-                <button class="calc-button number" data-num="9">9</button>
-                <button class="calc-button operator" data-op="divide">÷</button>
+                        <!-- Row 5 -->
+                        <button class="calc-button number" data-num="4">4</button>
+                        <button class="calc-button number" data-num="5">5</button>
+                        <button class="calc-button number" data-num="6">6</button>
+                        <button class="calc-button operator" data-op="multiply">×</button>
 
-                <!-- Row 5 -->
-                <button class="calc-button number" data-num="4">4</button>
-                <button class="calc-button number" data-num="5">5</button>
-                <button class="calc-button number" data-num="6">6</button>
-                <button class="calc-button operator" data-op="multiply">×</button>
+                        <!-- Row 6 -->
+                        <button class="calc-button number" data-num="1">1</button>
+                        <button class="calc-button number" data-num="2">2</button>
+                        <button class="calc-button number" data-num="3">3</button>
+                        <button class="calc-button operator" data-op="subtract">-</button>
 
-                <!-- Row 6 -->
-                <button class="calc-button number" data-num="1">1</button>
-                <button class="calc-button number" data-num="2">2</button>
-                <button class="calc-button number" data-num="3">3</button>
-                <button class="calc-button operator" data-op="subtract">-</button>
+                        <!-- Row 7 -->
+                        <button class="calc-button number zero" data-num="0">0</button>
+                        <button class="calc-button number" data-num=".">.</button>
+                        <button class="calc-button operator" data-op="add">+</button>
+                        <button class="calc-button operator equals" data-action="equals">=</button>
+                    </div>
+                </div>
+            </section>
 
-                <!-- Row 7 -->
-                <button class="calc-button number zero" data-num="0">0</button>
-                <button class="calc-button number" data-num=".">.</button>
-                <button class="calc-button operator" data-op="add">+</button>
-                <button class="calc-button operator equals" data-action="equals">=</button>
-            </div>
-        </section>
-
-        <!-- Interés Simple -->
-        <section id="simple-interest" class="card section" style="display: block;">
-            <h2>Interés Simple</h2>
-            <div class="form-group">
-                <label for="simple-principal">Monto Principal ($)</label>
-                <input type="number" id="simple-principal" placeholder="Ej. 1000">
-            </div>
-            <div class="form-group">
-                <label for="simple-rate">Tasa de Interés Anual (%)</label>
-                <input type="number" id="simple-rate" placeholder="Ej. 5">
-            </div>
-            <div class="form-group">
-                <label for="simple-time">Tiempo (Años)</label>
-                <input type="number" id="simple-time" placeholder="Ej. 2">
-            </div>
-            <button id="btn-simple-interest" class="btn-primary">Calcular Interés Simple</button>
-        </section>
-
-        <!-- Interés Compuesto -->
-        <section id="compound-interest" class="card section" style="display: block;">
-            <h2>Interés Compuesto</h2>
-            <div class="form-group">
-                <label for="compound-principal">Monto Principal ($)</label>
-                <input type="number" id="compound-principal" placeholder="Ej. 1000">
-            </div>
-            <div class="form-group">
-                <label for="compound-rate">Tasa de Interés Anual (%)</label>
-                <input type="number" id="compound-rate" placeholder="Ej. 5">
-            </div>
-            <div class="form-group">
-                <label for="compound-time">Tiempo (Años)</label>
-                <input type="number" id="compound-time" placeholder="Ej. 10">
-            </div>
-            <div class="form-group">
-                <label for="compound-frequency">Compuestos por Año</label>
-                <select id="compound-frequency">
-                    <option value="1">Anual (1)</option>
-                    <option value="12">Mensual (12)</option>
-                    <option value="4">Trimestral (4)</option>
-                    <option value="2">Semestral (2)</option>
-                </select>
-            </div>
-            <button id="btn-compound-interest" class="btn-primary">Calcular Interés Compuesto</button>
-        </section>
-
-        <!-- Préstamos y Movimientos -->
-        <section id="loans-movements" class="card section grid-container" style="display: none;">
-            <h2>Préstamos y Movimientos</h2>
-
-            <!-- Loan Amortization Form -->
-            <div class="subsection grid-item">
-                <h3>Amortización de Préstamo</h3>
+            <!-- Interés Simple -->
+            <section id="simple-interest" class="card section">
+                <h2>Interés Simple</h2>
                 <div class="form-group">
-                    <label for="loan-principal">Monto del Préstamo ($)</label>
-                    <input type="number" id="loan-principal" placeholder="Ej. 10000">
+                    <label for="simple-principal">Monto Principal ($)</label>
+                    <input type="number" id="simple-principal" placeholder="Ej. 1000">
                 </div>
                 <div class="form-group">
-                    <label for="loan-rate">Tasa de Interés Anual (%)</label>
-                    <input type="number" id="loan-rate" step="0.01" placeholder="Ej. 5">
+                    <label for="simple-rate">Tasa de Interés Anual (%)</label>
+                    <input type="number" id="simple-rate" placeholder="Ej. 5">
                 </div>
                 <div class="form-group">
-                    <label for="loan-months">Plazo (Meses)</label>
-                    <input type="number" id="loan-months" placeholder="Ej. 12">
+                    <label for="simple-time">Tiempo (Años)</label>
+                    <input type="number" id="simple-time" placeholder="Ej. 2">
                 </div>
-                <button id="btn-loan-amortization" class="btn-primary">Calcular Amortización</button>
+                <button id="btn-simple-interest" class="btn-primary">Calcular Interés Simple</button>
+            </section>
 
-                <!-- Amortization Table -->
-                <div class="table-container" style="margin-top: 20px;">
-                    <table id="amortization-table">
-                        <thead>
-                            <tr>
-                                <th>Mes</th>
-                                <th>Pago</th>
-                                <th>Capital</th>
-                                <th>Intereses</th>
-                            </tr>
-                        </thead>
-                        <tbody id="amortization-table-body">
-                            <!-- Amortization schedule will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Movement Tracking Form -->
-            <div class="subsection grid-item">
-                <h3>Registro de Movimientos</h3>
+            <!-- Interés Compuesto -->
+            <section id="compound-interest" class="card section">
+                <h2>Interés Compuesto</h2>
                 <div class="form-group">
-                    <label for="movement-type">Tipo de Movimiento</label>
-                    <select id="movement-type">
-                        <option value="ingreso">Ingreso</option>
-                        <option value="gasto">Gasto</option>
+                    <label for="compound-principal">Monto Principal ($)</label>
+                    <input type="number" id="compound-principal" placeholder="Ej. 1000">
+                </div>
+                <div class="form-group">
+                    <label for="compound-rate">Tasa de Interés Anual (%)</label>
+                    <input type="number" id="compound-rate" placeholder="Ej. 5">
+                </div>
+                <div class="form-group">
+                    <label for="compound-time">Tiempo (Años)</label>
+                    <input type="number" id="compound-time" placeholder="Ej. 10">
+                </div>
+                <div class="form-group">
+                    <label for="compound-frequency">Compuestos por Año</label>
+                    <select id="compound-frequency">
+                        <option value="1">Anual (1)</option>
+                        <option value="12">Mensual (12)</option>
+                        <option value="4">Trimestral (4)</option>
+                        <option value="2">Semestral (2)</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="movement-amount">Monto ($)</label>
-                    <input type="number" id="movement-amount" step="0.01" placeholder="Ej. 1000">
-                </div>
-                <div class="form-group">
-                    <label for="movement-description">Descripción</label>
-                    <input type="text" id="movement-description" placeholder="Ej. Salario mensual">
-                </div>
-                <button id="btn-track-movement" class="btn-primary">Registrar Movimiento</button>
+                <button id="btn-compound-interest" class="btn-primary">Calcular Interés Compuesto</button>
+            </section>
 
-                <!-- Balance Display -->
-                <div class="balance-summary"
-                    style="margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 5px;">
-                    <h4>Balance Actual</h4>
-                    <div id="balance-display" class="result-box" style="font-size: 24px; color: #2c3e50;">$0.00</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Trading Tools -->
-        <section id="trading-tools" class="card section" style="display: none;">
-            <h2>Herramientas de Trading</h2>
-
-            <div class="form-group">
-                <label for="trading-capital">Capital ($)</label>
-                <input type="number" id="trading-capital" step="0.01" placeholder="Ej. 10000">
-            </div>
-            <div class="form-group">
-                <label for="trading-entry">Precio de Entrada ($)</label>
-                <input type="number" id="trading-entry" step="0.01" placeholder="Ej. 50">
-            </div>
-            <div class="form-group">
-                <label for="trading-risk">Riesgo por Operación (%)</label>
-                <input type="number" id="trading-risk" step="0.1" placeholder="Ej. 2">
-            </div>
-            <div class="form-group">
-                <label for="trading-leverage">Apalancamiento (x)</label>
-                <input type="number" id="trading-leverage" step="1" placeholder="Ej. 10">
-            </div>
-            <div class="form-group">
-                <label for="trading-rr">Ratio Riesgo/Recompensa (R:R)</label>
-                <input type="number" id="trading-rr" step="0.1" placeholder="Ej. 2">
-            </div>
-            <button id="btn-trading-calculate" class="btn-primary">Calcular Trading</button>
-
-            <!-- Trading Results -->
-            <div class="trading-results"
-                style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
-                <h3>Resultados</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div>
-                        <strong>Stop Loss (SL):</strong>
-                        <div id="result-sl" style="font-size: 18px; color: #e74c3c;">$0.00</div>
-                    </div>
-                    <div>
-                        <strong>Take Profit (TP):</strong>
-                        <div id="result-tp" style="font-size: 18px; color: #27ae60;">$0.00</div>
-                    </div>
-                    <div>
-                        <strong>Tamaño de Lote:</strong>
-                        <div id="result-lot" style="font-size: 18px; color: #3498db;">0.0000</div>
-                    </div>
-                    <div>
-                        <strong>Margen Requerido:</strong>
-                        <div id="result-margen" style="font-size: 18px; color: #9b59b6;">$0.00</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+            <!-- Préstamos y Movimientos -->
+            <section id="loans-movements" class="card section">
+            </section>
+        </main>
 
         <!-- Resultados y Historial -->
-        <section id="results-section" class="card highlight section" style="display: block;">
+        <section id="results-section" class="card section">
             <h2>Resultado</h2>
             <div id="result-display" class="result-box">0.00</div>
             <button id="btn-save-history" class="btn-secondary">Guardar al Historial</button>
         </section>
 
-        <!-- Tabla de Historial (Opcional visualización rápida) -->
-        <section id="history-section" class="card section" style="display: block;">
-            <h2>Historial Reciente</h2>
-            <button id="btn-export-csv" class="btn-small">Descargar CSV</button>
-            <ul id="history-list">
-                <!-- Items del historial -->
+        <!-- History Panel -->
+        <aside id="history-panel">
+            <h3>Historial</h3>
+            <ul id="calc-history">
+                <!-- History items will be populated here -->
             </ul>
-        </section>
-    </main>
-
-    <!-- History Panel -->
-    <aside id="history-panel">
-        <h3>Historial</h3>
-        <ul id="calc-history">
-            <!-- History items will be populated here -->
-        </ul>
-        <button id="btn-clear-history" class="btn-small">Limpiar</button>
-    </aside>
+            <button id="btn-clear-history" class="btn-small w-full">Limpiar Todo</button>
+        </aside>
+    </div> <!-- End app-layout -->
 
     <footer>
-        <p>&copy; 2024 Finance Calculator MVP</p>
+        <p>&copy; 2025 Finance Calculator MVP</p>
     </footer>
 
     <script src="src/js/calculations.js"></script>

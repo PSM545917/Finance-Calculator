@@ -9,6 +9,26 @@ let calcState = {
     waitingForOperand: false
 };
 
+// UI Helpers
+const setLoading = (btnId, isLoading) => {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+
+    if (isLoading) {
+        btn.classList.add('btn-loading');
+        btn.disabled = true;
+    } else {
+        btn.classList.remove('btn-loading');
+        btn.disabled = false;
+    }
+};
+
+const simulateCalculationDelay = async (btnId) => {
+    setLoading(btnId, true);
+    await new Promise(resolve => setTimeout(resolve, 600)); // 600ms artificial delay
+    setLoading(btnId, false);
+};
+
 // Calculation history
 let calculationHistory = [];
 const HISTORY_KEY = 'finance_calculator_history';
@@ -344,23 +364,29 @@ function computeSimpleInterest(principal, rate, time) {
     return principal + interest;
 }
 
-function handleSimpleInterest() {
+async function handleSimpleInterest() {
+    await simulateCalculationDelay('btn-simple-interest');
+
     const principal = parseFloat(document.getElementById('simple-principal').value);
     const rate = parseFloat(document.getElementById('simple-rate').value);
     const time = parseFloat(document.getElementById('simple-time').value);
 
-    if (isNaN(principal) || isNaN(rate) || isNaN(time)) {
-        alert('Por favor ingresa valores numéricos válidos');
-        return;
-    }
+    try {
+        if (isNaN(principal) || isNaN(rate) || isNaN(time)) {
+            throw new Error('Por favor ingresa valores numéricos válidos');
+        }
+        if (principal < 0 || rate < 0 || time < 0) {
+            throw new Error('Los valores no pueden ser negativos');
+        }
 
-    if (principal < 0 || rate < 0 || time < 0) {
-        alert('Los valores no pueden ser negativos');
-        return;
-    }
+        const totalAmount = computeSimpleInterest(principal, rate, time);
+        const interestAmount = totalAmount - principal;
 
-    const total = computeSimpleInterest(principal, rate, time);
-    updateResult(total, 'Interés Simple', `P: ${principal}, r: ${rate}%, t: ${time} años`);
+        updateResult(totalAmount, "Interés Simple", `P: $${principal}, r: ${rate}%, t: ${time} años`);
+        alert(`Interés Generado: $${interestAmount.toFixed(2)}\nMonto Total: $${totalAmount.toFixed(2)}`);
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 // --- Compound Interest Logic ---
@@ -370,24 +396,30 @@ function computeCompoundInterest(principal, rate, time, compounds) {
     return principal * Math.pow((1 + (rate / 100) / compounds), compounds * time);
 }
 
-function handleCompoundInterest() {
+async function handleCompoundInterest() {
+    await simulateCalculationDelay('btn-compound-interest');
+
     const principal = parseFloat(document.getElementById('compound-principal').value);
     const rate = parseFloat(document.getElementById('compound-rate').value);
     const time = parseFloat(document.getElementById('compound-time').value);
-    const compounds = parseInt(document.getElementById('compound-frequency').value);
+    const compounds = parseFloat(document.getElementById('compound-frequency').value);
 
-    if (isNaN(principal) || isNaN(rate) || isNaN(time) || isNaN(compounds)) {
-        alert('Por favor ingresa valores numéricos válidos');
-        return;
+    try {
+        if (isNaN(principal) || isNaN(rate) || isNaN(time) || isNaN(compounds)) {
+            throw new Error('Por favor ingresa valores numéricos válidos');
+        }
+        if (principal < 0 || rate < 0 || time < 0 || compounds <= 0) {
+            throw new Error('Los valores no pueden ser negativos (compounds debe ser mayor a 0)');
+        }
+
+        const amount = computeCompoundInterest(principal, rate, time, compounds);
+        const interest = amount - principal;
+
+        updateResult(amount, "Interés Compuesto", `P: $${principal}, r: ${rate}%, t: ${time} años, n: ${compounds}`);
+        alert(`Monto Total: $${amount.toFixed(2)}\nInterés Generado: $${interest.toFixed(2)}`);
+    } catch (error) {
+        alert(error.message);
     }
-
-    if (principal < 0 || rate < 0 || time < 0 || compounds <= 0) {
-        alert('Los valores no pueden ser negativos (compounds debe ser mayor a 0)');
-        return;
-    }
-
-    const amount = computeCompoundInterest(principal, rate, time, compounds);
-    updateResult(amount, 'Interés Compuesto', `P: ${principal}, r: ${rate}%, t: ${time} años, n: ${compounds}`);
 }
 
 // --- Loan Amortization Logic ---
@@ -442,14 +474,19 @@ function amortizacionPrestamo(principal, tasaAnual, meses) {
     return schedule;
 }
 
-function handleLoanAmortization() {
+async function handleLoanAmortization() {
+    await simulateCalculationDelay('btn-loan-amortization');
+
     const principal = parseFloat(document.getElementById('loan-principal').value);
-    const tasaAnual = parseFloat(document.getElementById('loan-rate').value);
-    const meses = parseInt(document.getElementById('loan-months').value);
+    const rate = parseFloat(document.getElementById('loan-rate').value);
+    const months = parseFloat(document.getElementById('loan-months').value);
 
     try {
-        const schedule = amortizacionPrestamo(principal, tasaAnual, meses);
+        const schedule = amortizacionPrestamo(principal, rate, months);
         displayAmortizationSchedule(schedule);
+
+        // Show success feedback
+        alert(`Tabla de amortización generada exitosamente. Pago mensual estimado: $${schedule[0].pago.toFixed(2)}`);
     } catch (error) {
         alert(error.message);
     }
@@ -641,7 +678,9 @@ function positionSizing(capital, riskPercent, entryPrice, sl) {
     return parseFloat(lotSize.toFixed(4));
 }
 
-function handleTradingCalculation() {
+async function handleTradingCalculation() {
+    await simulateCalculationDelay('btn-trading-calculate');
+
     const capital = parseFloat(document.getElementById('trading-capital').value);
     const entryPrice = parseFloat(document.getElementById('trading-entry').value);
     const riskPercent = parseFloat(document.getElementById('trading-risk').value);
@@ -699,17 +738,24 @@ function displayTradingResults(results) {
 
 // --- SPA Navigation Logic ---
 
+// --- SPA Navigation Logic ---
+
 function switchSection(sectionId) {
     // Hide all sections
     const allSections = document.querySelectorAll('.section');
     allSections.forEach(section => {
         section.style.display = 'none';
+        section.classList.remove('fade-in');
     });
 
     // Show the selected section
     const targetSection = document.getElementById(sectionId);
     if (targetSection) {
         targetSection.style.display = 'block';
+        // Add minimal delay to trigger animation
+        setTimeout(() => {
+            targetSection.classList.add('fade-in');
+        }, 10);
     }
 
     // Update active button state
