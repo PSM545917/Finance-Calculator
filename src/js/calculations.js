@@ -355,73 +355,6 @@ function handleBasicCalculation(operation, symbol) {
     }
 }
 
-// --- Simple Interest Logic ---
-
-function computeSimpleInterest(principal, rate, time) {
-    // Formula: I = P * r * t (rate in decimal)
-    // Total Amount = P + I
-    const interest = principal * (rate / 100) * time;
-    return principal + interest;
-}
-
-async function handleSimpleInterest() {
-    await simulateCalculationDelay('btn-simple-interest');
-
-    const principal = parseFloat(document.getElementById('simple-principal').value);
-    const rate = parseFloat(document.getElementById('simple-rate').value);
-    const time = parseFloat(document.getElementById('simple-time').value);
-
-    try {
-        if (isNaN(principal) || isNaN(rate) || isNaN(time)) {
-            throw new Error('Por favor ingresa valores numéricos válidos');
-        }
-        if (principal < 0 || rate < 0 || time < 0) {
-            throw new Error('Los valores no pueden ser negativos');
-        }
-
-        const totalAmount = computeSimpleInterest(principal, rate, time);
-        const interestAmount = totalAmount - principal;
-
-        updateResult(totalAmount, "Interés Simple", `P: $${principal}, r: ${rate}%, t: ${time} años`);
-        alert(`Interés Generado: $${interestAmount.toFixed(2)}\nMonto Total: $${totalAmount.toFixed(2)}`);
-    } catch (error) {
-        alert(error.message);
-    }
-}
-
-// --- Compound Interest Logic ---
-
-function computeCompoundInterest(principal, rate, time, compounds) {
-    // Formula: A = P * (1 + r/n)^(n*t)
-    return principal * Math.pow((1 + (rate / 100) / compounds), compounds * time);
-}
-
-async function handleCompoundInterest() {
-    await simulateCalculationDelay('btn-compound-interest');
-
-    const principal = parseFloat(document.getElementById('compound-principal').value);
-    const rate = parseFloat(document.getElementById('compound-rate').value);
-    const time = parseFloat(document.getElementById('compound-time').value);
-    const compounds = parseFloat(document.getElementById('compound-frequency').value);
-
-    try {
-        if (isNaN(principal) || isNaN(rate) || isNaN(time) || isNaN(compounds)) {
-            throw new Error('Por favor ingresa valores numéricos válidos');
-        }
-        if (principal < 0 || rate < 0 || time < 0 || compounds <= 0) {
-            throw new Error('Los valores no pueden ser negativos (compounds debe ser mayor a 0)');
-        }
-
-        const amount = computeCompoundInterest(principal, rate, time, compounds);
-        const interest = amount - principal;
-
-        updateResult(amount, "Interés Compuesto", `P: $${principal}, r: ${rate}%, t: ${time} años, n: ${compounds}`);
-        alert(`Monto Total: $${amount.toFixed(2)}\nInterés Generado: $${interest.toFixed(2)}`);
-    } catch (error) {
-        alert(error.message);
-    }
-}
-
 // --- Loan Amortization Logic ---
 
 function amortizacionPrestamo(principal, tasaAnual, meses) {
@@ -781,14 +714,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnSubtract) btnSubtract.addEventListener('click', () => handleBasicCalculation('subtract', '-'));
     if (btnMultiply) btnMultiply.addEventListener('click', () => handleBasicCalculation('multiply', '×'));
     if (btnDivide) btnDivide.addEventListener('click', () => handleBasicCalculation('divide', '÷'));
-
-    // Simple Interest Button
-    const btnSimple = document.getElementById('btn-simple-interest');
-    if (btnSimple) btnSimple.addEventListener('click', handleSimpleInterest);
-
-    // Compound Interest Button
-    const btnCompound = document.getElementById('btn-compound-interest');
-    if (btnCompound) btnCompound.addEventListener('click', handleCompoundInterest);
 
     // Loan Amortization Button
     const btnLoan = document.getElementById('btn-loan-amortization');

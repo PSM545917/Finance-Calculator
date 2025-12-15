@@ -95,62 +95,147 @@
                 </div>
             </section>
 
-            <!-- Interés Simple -->
-            <section id="simple-interest" class="card section">
-                <h2>Interés Simple</h2>
-                <div class="form-group">
-                    <label for="simple-principal">Monto Principal ($)</label>
-                    <input type="number" id="simple-principal" placeholder="Ej. 1000">
-                </div>
-                <div class="form-group">
-                    <label for="simple-rate">Tasa de Interés Anual (%)</label>
-                    <input type="number" id="simple-rate" placeholder="Ej. 5">
-                </div>
-                <div class="form-group">
-                    <label for="simple-time">Tiempo (Años)</label>
-                    <input type="number" id="simple-time" placeholder="Ej. 2">
-                </div>
-                <button id="btn-simple-interest" class="btn-primary">Calcular Interés Simple</button>
-            </section>
-
-            <!-- Interés Compuesto -->
-            <section id="compound-interest" class="card section">
-                <h2>Interés Compuesto</h2>
-                <div class="form-group">
-                    <label for="compound-principal">Monto Principal ($)</label>
-                    <input type="number" id="compound-principal" placeholder="Ej. 1000">
-                </div>
-                <div class="form-group">
-                    <label for="compound-rate">Tasa de Interés Anual (%)</label>
-                    <input type="number" id="compound-rate" placeholder="Ej. 5">
-                </div>
-                <div class="form-group">
-                    <label for="compound-time">Tiempo (Años)</label>
-                    <input type="number" id="compound-time" placeholder="Ej. 10">
-                </div>
-                <div class="form-group">
-                    <label for="compound-frequency">Compuestos por Año</label>
-                    <select id="compound-frequency">
-                        <option value="1">Anual (1)</option>
-                        <option value="12">Mensual (12)</option>
-                        <option value="4">Trimestral (4)</option>
-                        <option value="2">Semestral (2)</option>
-                    </select>
-                </div>
-                <button id="btn-compound-interest" class="btn-primary">Calcular Interés Compuesto</button>
-            </section>
-
             <!-- Préstamos y Movimientos -->
-            <section id="loans-movements" class="card section">
-            </section>
-        </main>
+            <section id="loans-movements" class="section">
+                <div class="card">
+                    <h2>Préstamos y Movimientos</h2>
 
-        <!-- Resultados y Historial -->
-        <section id="results-section" class="card section">
-            <h2>Resultado</h2>
-            <div id="result-display" class="result-box">0.00</div>
-            <button id="btn-save-history" class="btn-secondary">Guardar al Historial</button>
-        </section>
+                    <div class="grid-2">
+                        <!-- Loan Amortization -->
+                        <div class="subsection">
+                            <h3>Amortización de Préstamo</h3>
+                            <div class="form-group">
+                                <label for="loan-principal">Monto del Préstamo ($)</label>
+                                <input type="number" id="loan-principal" placeholder="Ej. 10000">
+                            </div>
+                            <div class="form-group">
+                                <label for="loan-rate">Tasa de Interés Anual (%)</label>
+                                <input type="number" id="loan-rate" step="0.01" placeholder="Ej. 5">
+                            </div>
+                            <div class="form-group">
+                                <label for="loan-months">Plazo (Meses)</label>
+                                <input type="number" id="loan-months" placeholder="Ej. 12">
+                            </div>
+                            <button id="btn-loan-amortization" class="btn-primary">Calcular Amortización</button>
+
+                            <div class="table-container mt-4">
+                                <table id="amortization-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mes</th>
+                                            <th>Pago</th>
+                                            <th>Capital</th>
+                                            <th>Intereses</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="amortization-table-body">
+                                        <!-- Amortization schedule will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Movement Tracking -->
+                        <div class="subsection">
+                            <h3>Registro de Movimientos</h3>
+                            <div class="form-group">
+                                <label for="movement-type">Tipo de Movimiento</label>
+                                <select id="movement-type">
+                                    <option value="ingreso">Ingreso</option>
+                                    <option value="gasto">Gasto</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="movement-amount">Monto ($)</label>
+                                <input type="number" id="movement-amount" step="0.01" placeholder="Ej. 1000">
+                            </div>
+                            <div class="form-group">
+                                <label for="movement-description">Descripción</label>
+                                <input type="text" id="movement-description" placeholder="Ej. Salario mensual">
+                            </div>
+                            <button id="btn-track-movement" class="btn-primary">Registrar Movimiento</button>
+
+                            <div class="balance-summary mt-4">
+                                <h4>Balance Actual</h4>
+                                <div id="balance-display" class="result-box" style="font-size: 1.5rem; padding: 1rem;">
+                                    $0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trading Tools -->
+            <section id="trading-tools" class="section">
+                <div class="card">
+                    <h2>Herramientas de Trading</h2>
+
+                    <div class="grid-2">
+                        <!-- Calculators Column -->
+                        <div class="subsection">
+                            <h3>Calculadora de Posición</h3>
+                            <div class="form-group">
+                                <label for="trading-capital">Capital Total ($)</label>
+                                <input type="number" id="trading-capital" step="0.01" placeholder="Ej. 10000">
+                            </div>
+                            <div class="form-group">
+                                <label for="trading-entry">Precio de Entrada ($)</label>
+                                <input type="number" id="trading-entry" step="0.01" placeholder="Ej. 50">
+                            </div>
+                            <div class="form-group">
+                                <label for="trading-risk">Riesgo (%)</label>
+                                <input type="number" id="trading-risk" step="0.1" placeholder="Ej. 1-2%">
+                            </div>
+                            <div class="form-group">
+                                <label for="trading-leverage">Apalancamiento (x)</label>
+                                <input type="number" id="trading-leverage" step="1" value="1" placeholder="Ej. 10">
+                            </div>
+                            <div class="form-group">
+                                <label for="trading-rr">Ratio Riesgo/Beneficio</label>
+                                <input type="number" id="trading-rr" step="0.1" value="2" placeholder="Ej. 2">
+                            </div>
+                            <button id="btn-trading-calculate" class="btn-primary">Calcular Posición</button>
+                        </div>
+
+                        <!-- Results Column -->
+                        <div class="subsection trading-results">
+                            <h3>Resultados del Trade</h3>
+                            <div class="grid-2">
+                                <div>
+                                    <strong>Stop Loss (SL):</strong>
+                                    <div id="result-sl" class="text-error"
+                                        style="font-size: 1.2rem; font-weight: bold;">$0.00</div>
+                                </div>
+                                <div>
+                                    <strong>Take Profit (TP):</strong>
+                                    <div id="result-tp" class="text-success"
+                                        style="font-size: 1.2rem; font-weight: bold;">$0.00</div>
+                                </div>
+                                <div>
+                                    <strong>Tamaño de Lote/Unidades:</strong>
+                                    <div id="result-lot" style="font-size: 1.2rem; font-weight: bold;">0.0000</div>
+                                </div>
+                                <div>
+                                    <strong>Margen Requerido:</strong>
+                                    <div id="result-margen" style="font-size: 1.2rem; font-weight: bold;">$0.00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Resultados y Historial (Global) -->
+            <section id="results-section" class="card section mt-4">
+                <h2>Resultado Global</h2>
+                <div id="result-display" class="result-box">0.00</div>
+                <button id="btn-save-history" class="btn-secondary">Guardar al Historial</button>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 Finance Calculator MVP</p>
+            </footer>
+        </main>
 
         <!-- History Panel -->
         <aside id="history-panel">
@@ -162,12 +247,19 @@
         </aside>
     </div> <!-- End app-layout -->
 
-    <footer>
-        <p>&copy; 2025 Finance Calculator MVP</p>
-    </footer>
+    <!-- History Panel -->
+    <aside id="history-panel">
+        <h3>Historial</h3>
+        <ul id="calc-history">
+            <!-- History items will be populated here -->
+        </ul>
+        <button id="btn-clear-history" class="btn-small w-full">Limpiar Todo</button>
+    </aside>
+    </div> <!-- End app-layout -->
 
     <script src="src/js/calculations.js"></script>
     <script src="src/js/history.js"></script>
 </body>
 
 </html>
+```
