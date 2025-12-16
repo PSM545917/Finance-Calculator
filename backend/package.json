@@ -1,6 +1,6 @@
 {
     "name": "finance-calculator-api",
-    "version": "1.0.0",
+    "version": "0.3.0-rc1",
     "description": "Backend API for Finance Calculator",
     "main": "server.js",
     "scripts": {

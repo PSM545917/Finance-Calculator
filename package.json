@@ -1,6 +1,6 @@
 {
   "name": "finance-calculator-mvp",
-  "version": "0.1.0",
+  "version": "0.3.0-rc1",
   "description": "Finance Calculator MVP with basic calculations, simple/compound interest, and CSV export",
   "main": "index.html",
   "scripts": {
