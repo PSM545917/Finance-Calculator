@@ -1,0 +1,69 @@
+services:
+  # Database Service
+  finance-db:
+    image: postgres:15-alpine
+    container_name: finance-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: finance_calculator
+      POSTGRES_USER: finance_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-finance_pass_2024}
+    volumes:
+      - finance-data:/var/lib/postgresql/data
+      - ./docker/database/init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - finance-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U finance_user -d finance_calculator" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+
+  # Backend API Service
+  finance-api:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    image: finance-calculator/api:latest
+    container_name: finance-api
+    restart: unless-stopped
+    depends_on:
+      finance-db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: finance-db
+      DB_PORT: 5432
+      DB_NAME: finance_calculator
+      DB_USER: finance_user
+      DB_PASSWORD: ${DB_PASSWORD:-finance_pass_2024}
+    networks:
+      - finance-network
+    ports:
+      - "3000:3000"
+
+  # Frontend Service
+  finance-frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    image: finance-calculator/frontend:latest
+    container_name: finance-frontend
+    restart: unless-stopped
+    depends_on:
+      - finance-api
+    networks:
+      - finance-network
+    ports:
+      - "8080:80"
+
+networks:
+  finance-network:
+    driver: bridge
+
+volumes:
+  finance-data:
+    driver: local

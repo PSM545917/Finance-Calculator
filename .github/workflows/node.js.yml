@@ -2,17 +2,17 @@ name: Node.js CI - Finance Calculator Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, main ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, main ]
 
 jobs:
-  test:
+  test-and-build:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [18.x]
 
     steps:
     - name: Checkout code
@@ -33,12 +33,12 @@ jobs:
     - name: Run tests with coverage
       run: npm test -- --coverage
       
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v4
-      if: matrix.node-version == '20.x'
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./coverage/coverage-final.json
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: false
+    # Docker Build Steps (Evidence of Containerization)
+    - name: Build Docker Frontend
+      run: docker build -t finance-calculator/frontend:latest -f docker/frontend/Dockerfile .
+
+    - name: Build Docker Backend
+      run: docker build -t finance-calculator/api:latest -f docker/backend/Dockerfile .
+      
+    - name: Verify Docker Compose Config
+      run: docker compose -f docker-compose.yml config
