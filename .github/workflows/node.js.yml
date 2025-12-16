@@ -2,7 +2,7 @@ name: Node.js CI - Finance Calculator Tests
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ master, main, 'sprint-2-final', 'feature/*' ]
   pull_request:
     branches: [ master, main ]
 
@@ -25,7 +25,7 @@ jobs:
         # cache: 'npm' # Disabled until package-lock.json is consistently present in repo
         
     - name: Install dependencies
-      run: npm ci
+      run: npm install
       
     - name: Run tests
       run: npm test
