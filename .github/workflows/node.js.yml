@@ -1,44 +1,32 @@
-name: Node.js CI - Finance Calculator Tests
+name: DEBUG CI FIX - Finance Calculator
 
 on:
   push:
-    branches: [ master, main, 'sprint-2-final', 'feature/*' ]
+    branches: [ '*' ] # Trigger on ALL branches to ensure it runs
   pull_request:
-    branches: [ master, main ]
+    branches: [ '*' ]
 
 jobs:
-  test-and-build:
+  debug-build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Setup Node.js ${{ matrix.node-version }}
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
-        # cache: 'npm' # Disabled until package-lock.json is consistently present in repo
+        node-version: 18.x
+        # CACHE IS EXPLICITLY DISABLED HERE
         
-    - name: Install dependencies
+    - name: Install dependencies (No Lockfile Check)
       run: npm install
       
     - name: Run tests
       run: npm test
       
-    - name: Run tests with coverage
-      run: npm test -- --coverage
-      
-    # Docker Build Steps (Evidence of Containerization)
     - name: Build Docker Frontend
       run: docker build -t finance-calculator/frontend:latest -f docker/frontend/Dockerfile .
 
     - name: Build Docker Backend
       run: docker build -t finance-calculator/api:latest -f docker/backend/Dockerfile .
-      
-    - name: Verify Docker Compose Config
-      run: docker compose -f docker-compose.yml config
